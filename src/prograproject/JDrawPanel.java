@@ -23,6 +23,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -45,32 +46,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean cleared = false;
     
     private double cantidadImagenes = 6.0;
-    private BufferedImage fondo;
     private BufferedImage img;
     private BufferedImage img2;
     private BufferedImage img3;
     private BufferedImage img4;
-    private BufferedImage img5;
-    private BufferedImage img6;
-    private BufferedImage imgEH;
-    private BufferedImage imgEH2;
-    private BufferedImage imgEH3;
-    private BufferedImage imgEH4;
-    private BufferedImage imgEH5;
-    private BufferedImage imgEH6;
-    private BufferedImage imgEV;
-    private BufferedImage imgEV2;
-    private BufferedImage imgEV3;
-    private BufferedImage imgEV4;
-    private BufferedImage imgEV5;
-    private BufferedImage imgEV6;
-    private BufferedImage imgEB;
-    private BufferedImage imgEB2;
-    private BufferedImage imgEB3;
-    private BufferedImage imgEB4;
-    private BufferedImage imgEB5;
-    private BufferedImage imgEB6;
-    private BufferedImage imgCaca;
+    
     private int filaInicial;
     private int columnaInicial;
     int contador = 0;
@@ -78,8 +58,15 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private int puntajeNivel = 0;
     private int movimientosNivel = -1;
     
-    private Point drawPoint;
-
+    private ArrayList<Point> startPoints;
+    private ArrayList<Point> standPoints;
+    private ArrayList<Point> endPoints;
+    private ArrayList<Point> transitionPoints;
+    
+    private boolean isStartNode = false;
+    private boolean isEndNode = false;
+    private boolean isStandNode = false;
+    private boolean isTransition = false;
     
     public JDrawPanel()
     {
@@ -89,15 +76,19 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseListener(this);
         super.addMouseMotionListener(this);
         
+        this.startPoints = new ArrayList<>();
+        this.standPoints = new ArrayList<>();
+        this.endPoints = new ArrayList<>();
+        this.transitionPoints = new ArrayList<>();
+        
         try{
             img = ImageIO.read(new File("src/prograproject/dc6.jpg"));            
+            img2 = ImageIO.read(new File("src/prograproject/dc4.jpg"));            
+            img3 = ImageIO.read(new File("src/prograproject/dc7.jpg"));            
             }
             catch(IOException e)
             {
             }
-        
-        
-//        secuencia();
         
     }
     
@@ -106,11 +97,29 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     {
         super.paint(g);
         
-        if (drawPoint != null)
+        if (startPoints != null)
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
-            g.drawImage(img, drawPoint.x, drawPoint.y, 50, 50, this);
-            System.out.println("drawww");
+            for (int i = 0; i < startPoints.size(); i++) {
+                g.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, 50, 50, this);
+
+            }
+        }
+        if (standPoints != null)
+        {
+//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
+            for (int i = 0; i < standPoints.size(); i++) {
+                g.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, 50, 50, this);
+
+            }
+        }
+        if (endPoints != null)
+        {
+//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
+            for (int i = 0; i < endPoints.size(); i++) {
+                g.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, 50, 50, this);
+
+            }
         }
     }
     
@@ -194,8 +203,23 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     public void mouseClicked(MouseEvent e)
     {
         System.out.println("click");
-        drawPoint = new Point(e.getPoint());
-        System.out.println("x: " + drawPoint.getX() + " y: " + drawPoint.getY());
+        if(isIsStartNode())
+        {
+            startPoints.add(new Point(e.getPoint()));
+            setIsStartNode(false);
+            
+        }
+        else if(isStandNode)
+        {
+            standPoints.add(new Point(e.getPoint()));
+            setIsStandNode(false);
+        }
+        else if(isEndNode)
+        {
+            endPoints.add(new Point(e.getPoint()));
+            setIsEndNode(false);
+        }
+//        System.out.println("x: " + drawPoint.getX() + " y: " + drawPoint.getY());
         repaint();
         
     }
@@ -233,7 +257,6 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        
     }
 
 
@@ -280,6 +303,38 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     boolean getCleared()
     {
         return this.cleared;
+    }
+
+    public boolean isIsStartNode() {
+        return isStartNode;
+    }
+
+    public void setIsStartNode(boolean isStartNode) {
+        this.isStartNode = isStartNode;
+    }
+
+    public boolean isIsEndNode() {
+        return isEndNode;
+    }
+
+    public void setIsEndNode(boolean isEndNode) {
+        this.isEndNode = isEndNode;
+    }
+
+    public boolean isIsStandNode() {
+        return isStandNode;
+    }
+
+    public void setIsStandNode(boolean isStandNode) {
+        this.isStandNode = isStandNode;
+    }
+
+    public boolean isIsTransition() {
+        return isTransition;
+    }
+
+    public void setIsTransition(boolean isTransition) {
+        this.isTransition = isTransition;
     }
     
 

@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -58,7 +59,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private int j;
     
     private BufferedImage fondo;
-    
+    private JDrawPanel panelLv1;
     
     public JMainPanel()
     {
@@ -70,7 +71,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseMotionListener(this);
         
         
-        JDrawPanel panelLv1 = this.panelMaker();
+        this.panelLv1 = this.panelMaker();
         frameLv1 = frameMaker(panelLv1);
         frameLv1.setVisible(false);
         System.out.println("cleared: "+panelLv1.getCleared());
@@ -91,9 +92,11 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 //        boton4.setBounds(270,355,130,30);
         
         
-//        boton1.addActionListener(this);
-        
-//        this.add(boton1);
+        startNode.addActionListener(this);
+        transNode.addActionListener(this);
+        endNode.addActionListener(this);
+        transition.addActionListener(this);
+//        this.add(startNode);
         
 //        boton1.addActionListener(this);
 
@@ -193,17 +196,24 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     }
      public  void actionPerformed(ActionEvent e)
     {
-     
-        /**
-        if(e.getSource()== boton1)
+        if(e.getSource()==startNode)
         {
-            JDrawPanel panelLv1 = this.panelMaker();
-            frameLv1 = frameMaker(panelLv1);
-            frameLv1.setVisible(false);
-            System.out.println("cleared: "+panelLv1.getCleared());
-            this.frameLv1.setVisible(true);
+            System.out.println("boton1!");
+            this.panelLv1.setIsStartNode(true);
+            startNode.setEnabled(false);
         }
-        * */
+        
+        if(e.getSource()==transNode)
+        {
+            System.out.println("boton1!");
+            this.panelLv1.setIsStandNode(true);
+        }
+        
+        if(e.getSource()==endNode)
+        {
+            System.out.println("boton1!");
+            this.panelLv1.setIsEndNode(true);
+        }
     }
      
     public JDrawPanel panelMaker()
