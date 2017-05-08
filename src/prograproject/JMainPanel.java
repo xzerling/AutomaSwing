@@ -42,7 +42,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private JButton endNode;
     private JButton transition;
     
-    JDialog dialog;
+    private JButton verWord;
+    
+    private Dialogs dialog;
+    
     JFrame frame;
     JFrame creditos;
     
@@ -100,6 +103,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         transNode.addActionListener(this);
         endNode.addActionListener(this);
         transition.addActionListener(this);
+        verWord.addActionListener(this);
 //        this.add(startNode);
         
 //        boton1.addActionListener(this);
@@ -125,19 +129,13 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         JMenu file = new JMenu("Archivo");
         
         JPanel southPanel = new JPanel();
-        southPanel.setLayout(new GridLayout(2,2));
+        southPanel.setLayout(new BorderLayout());
         
         this.sigma = new JTextField();
         this.sigma.setEnabled(false);
         
         this.inputWord = new JTextField();
-        
-        southPanel.add(new JLabel("Alfabeto : "), 0, 0);
-        southPanel.add(this.sigma, 0, 1);
-        
-        southPanel.add(new JLabel("Palabra : "), 1,0);
-        southPanel.add(this.inputWord, 1, 1);
-        
+                
         menuBar.add(file);
         
         JToolBar toolbar = new JToolBar();
@@ -146,6 +144,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.transNode = new JButton("Trs Node");
         this.endNode = new JButton("End Node");
         this.transition = new JButton(" Trans  ");
+        
+        this.verWord = new JButton("Verificar palabra");
+        this.verWord.setBounds(120,10 ,150 ,20);
         
         this.startNode.setPreferredSize(new Dimension(60,47));
         this.transNode.setPreferredSize(new Dimension(60,47));
@@ -158,6 +159,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         toolbar.add(this.transition);
         
         northPanel.add(toolbar,1,0);
+        southPanel.add(this.verWord , BorderLayout.CENTER);
         
         frame = new JFrame();
         frame.setJMenuBar(menuBar);
@@ -231,6 +233,13 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         {
             System.out.println("boton1!");
             this.panelLv1.setIsEndNode(true);
+        }
+        if(e.getSource()==verWord)
+        {
+            System.out.println("boton culiao!");
+            this.dialog = new Dialogs();
+            
+            this.dialog.setVisible(true);
         }
     }
      
