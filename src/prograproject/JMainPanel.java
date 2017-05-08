@@ -27,6 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 /**
@@ -46,6 +47,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     JFrame creditos;
     
     JFrame frameLv1;
+    
+    private JTextField sigma;
+    private JTextField inputWord;
     
     private BufferedImage img;
     private ImageIcon  imgCredito;
@@ -120,6 +124,20 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("Archivo");
         
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new GridLayout(2,2));
+        
+        this.sigma = new JTextField();
+        this.sigma.setEnabled(false);
+        
+        this.inputWord = new JTextField();
+        
+        southPanel.add(new JLabel("Alfabeto : "), 0, 0);
+        southPanel.add(this.sigma, 0, 1);
+        
+        southPanel.add(new JLabel("Palabra : "), 1,0);
+        southPanel.add(this.inputWord, 1, 1);
+        
         menuBar.add(file);
         
         JToolBar toolbar = new JToolBar();
@@ -139,7 +157,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         toolbar.add(this.endNode);
         toolbar.add(this.transition);
         
-        
         northPanel.add(toolbar,1,0);
         
         frame = new JFrame();
@@ -148,6 +165,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         frame.setLayout(new BorderLayout());
         frame.add(panel, BorderLayout.CENTER);
         frame.add(northPanel, BorderLayout.NORTH);
+        frame.add(southPanel, BorderLayout.SOUTH);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
