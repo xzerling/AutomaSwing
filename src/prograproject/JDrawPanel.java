@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -76,6 +77,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     int puntaje = 0;
     private int puntajeNivel = 0;
     private int movimientosNivel = -1;
+    
+    private Point drawPoint;
 
     
     public JDrawPanel()
@@ -87,33 +90,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseMotionListener(this);
         
         try{
-            fondo = ImageIO.read(new File("src/fondojuego.jpg"));            
-            img = ImageIO.read(new File("src/dc1.jpg"));            
-            img2 = ImageIO.read(new File("src/dc2.jpg"));
-            img3 = ImageIO.read(new File("src/dc3.jpg"));            
-            img4 = ImageIO.read(new File("src/dc4.jpg"));
-            img5 = ImageIO.read(new File("src/dc5.jpg"));            
-            img6 = ImageIO.read(new File("src/dc6.jpg"));
-            imgCaca = ImageIO.read(new File("src/dc7.jpg"));
-            imgEH = ImageIO.read(new File("src/dcHorizontal/dc1h.jpg"));            
-            imgEH2 = ImageIO.read(new File("src/dcHorizontal/dc2h.jpg"));
-            imgEH3 = ImageIO.read(new File("src/dcHorizontal/dc3h.jpg"));            
-            imgEH4 = ImageIO.read(new File("src/dcHorizontal/dc4h.jpg"));
-            imgEH5 = ImageIO.read(new File("src/dcHorizontal/dc5h.jpg"));            
-            imgEH6 = ImageIO.read(new File("src/dcHorizontal/dc6h.jpg"));
-            imgEV = ImageIO.read(new File("src/dcVertical/dc1v.jpg"));            
-            imgEV2 = ImageIO.read(new File("src/dcVertical/dc2v.jpg"));
-            imgEV3 = ImageIO.read(new File("src/dcVertical/dc3v.jpg"));            
-            imgEV4 = ImageIO.read(new File("src/dcVertical/dc4v.jpg"));
-            imgEV5 = ImageIO.read(new File("src/dcVertical/dc5v.jpg"));            
-            imgEV6 = ImageIO.read(new File("src/dcVertical/dc6v.jpg"));
-            imgEB = ImageIO.read(new File("src/dcBomba/dc1b.jpg"));
-            imgEB2 = ImageIO.read(new File("src/dcBomba/dc2b.jpg"));
-            imgEB3 = ImageIO.read(new File("src/dcBomba/dc3b.jpg"));
-            imgEB4 = ImageIO.read(new File("src/dcBomba/dc4b.jpg"));
-            imgEB5 = ImageIO.read(new File("src/dcBomba/dc5b.jpg"));
-            imgEB6 = ImageIO.read(new File("src/dcBomba/dc6b.jpg"));
-            
+            img = ImageIO.read(new File("src/prograproject/dc6.jpg"));            
             }
             catch(IOException e)
             {
@@ -127,26 +104,14 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     @Override
     public void paint(Graphics g)
     {
-
         super.paint(g);
-        if(fondo != null) {
-          g.drawImage(fondo, 0, 0, null);
-         }
         
-        
-        for(i = 1; i <= columnas+1; i++)
+        if (drawPoint != null)
         {
-            g.drawLine(i*JDrawPanel.DEFAULT_SIZE, JDrawPanel.DEFAULT_SIZE, 
-                        i*JDrawPanel.DEFAULT_SIZE, JDrawPanel.DEFAULT_SIZE * (columnas +1));           
-            for (int j = 1; j <= filas+1; j++)
-            {
-
-               g.drawLine(i*JDrawPanel.DEFAULT_SIZE, j*JDrawPanel.DEFAULT_SIZE, 
-               JDrawPanel.DEFAULT_SIZE * filas, j*JDrawPanel.DEFAULT_SIZE);   
-            }
+//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
+            g.drawImage(img, drawPoint.x, drawPoint.y, 50, 50, this);
+            System.out.println("drawww");
         }
-        
-
     }
     
 public BufferedImage imagenAleatoria(BufferedImage img, BufferedImage img2, BufferedImage img3, 
@@ -228,7 +193,11 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     @Override
     public void mouseClicked(MouseEvent e)
     {
-
+        System.out.println("click");
+        drawPoint = new Point(e.getPoint());
+        System.out.println("x: " + drawPoint.getX() + " y: " + drawPoint.getY());
+        repaint();
+        
     }
 
     @Override
