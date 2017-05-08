@@ -40,12 +40,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private int columnas = 9;
     private int i;
     private int j;
-    private JButton boton1;
-    private JButton boton2;
-    private JButton boton3;
-    private JButton boton4;
-    private JButton boton5;
-    private JButton boton6;
     
     private boolean cleared = false;
     
@@ -92,37 +86,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseListener(this);
         super.addMouseMotionListener(this);
         
-        boton1 = new JButton("Rellenar");
-        boton2 = new JButton("recorrerY");
-        boton3 = new JButton("RecorrerX");
-        boton4 = new JButton("Recorrer");
-        boton5 = new JButton("Bajar");
-        boton6 = new JButton("Secuencia");
-
-        boton1.setBounds(0, 0, 100, 40);
-        boton2.setBounds(120, 0, 100, 40);
-        boton3.setBounds(240, 0, 100, 40);
-        boton4.setBounds(360, 0, 100, 40);
-        boton5.setBounds(480, 0, 100, 40);
-        boton6.setBounds(540, 0, 100, 40);
-        
-        this.add(boton1);
-        this.add(boton2);
-        this.add(boton3);
-        this.add(boton4);
-        this.add(boton5);
-        this.add(boton6);
-        
-        boton1.addActionListener(this);
-        boton2.addActionListener(this);
-        boton3.addActionListener(this);
-        boton4.addActionListener(this);
-        boton5.addActionListener(this);
-        boton6.addActionListener(this);
-        
-        
-        
-
         try{
             fondo = ImageIO.read(new File("src/fondojuego.jpg"));            
             img = ImageIO.read(new File("src/dc1.jpg"));            

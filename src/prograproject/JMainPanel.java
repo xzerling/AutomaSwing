@@ -8,6 +8,7 @@ package prograproject;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,7 +23,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
+import javax.swing.JToolBar;
 
 /**
  *
@@ -31,25 +35,16 @@ import javax.swing.JPanel;
 public class JMainPanel extends JPanel implements MouseMotionListener, MouseListener, ActionListener
 {
     
-     private JButton boton1;
-    private JButton boton2;
-    private JButton boton3;
-    private JButton boton4;
+    private JButton startNode;
+    private JButton transNode;
+    private JButton endNode;
+    private JButton transition;
     
     JDialog dialog;
     JFrame frame;
     JFrame creditos;
     
     JFrame frameLv1;
-    JFrame frameLv2;
-    JFrame frameLv3;
-    JFrame frameLv4;
-    JFrame frameLv5;
-    JFrame frameLv6;
-    JFrame frameLv7;
-    JFrame frameLv8;
-    JFrame frameLv9;
-    JFrame frameLv10;
     
     private BufferedImage img;
     private ImageIcon  imgCredito;
@@ -61,24 +56,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private int columnas = 9;
     private int i;
     private int j;
-//    private JButton boton1;
-//    private JButton boton2;
-//    private JButton boton3;
-//    private JButton boton4;
-//    private JButton boton5;
-//    private JButton boton6;
     
-    private boolean cleared = false;
-    
-//    JFrame frame;
     private BufferedImage fondo;
-    private int filaInicial;
-    private int columnaInicial;
-    int contador = 0;
-    int puntaje = 0;
-    private int puntajeNivel = 0;
-    private int movimientosNivel = -1;
-
+    
     
     public JMainPanel()
     {
@@ -91,10 +71,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         
         JDrawPanel panelLv1 = this.panelMaker();
-            frameLv1 = frameMaker(panelLv1);
-            frameLv1.setVisible(false);
-            System.out.println("cleared: "+panelLv1.getCleared());
-            this.frameLv1.setVisible(true);
+        frameLv1 = frameMaker(panelLv1);
+        frameLv1.setVisible(false);
+        System.out.println("cleared: "+panelLv1.getCleared());
+        this.frameLv1.setVisible(true);
         
         //Dimension dimension = new Dimension(JMainPanel.WIDTH, JMainPanel.HEIGHT);
 //        Dimension dimension = new Dimension(600, 600);
@@ -132,15 +112,39 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 
     public JFrame frameMaker(JDrawPanel panel)
      {
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new GridLayout(1,1));
+        JMenuBar menuBar = new JMenuBar();
+        JMenu file = new JMenu("Archivo");
+        
+        menuBar.add(file);
+        
+        JToolBar toolbar = new JToolBar();
+        
+        this.startNode = new JButton("Str Node");
+        this.transNode = new JButton("Trs Node");
+        this.endNode = new JButton("End Node");
+        this.transition = new JButton(" Trans  ");
+        
+        this.startNode.setPreferredSize(new Dimension(60,47));
+        this.transNode.setPreferredSize(new Dimension(60,47));
+        this.endNode.setPreferredSize(new Dimension(60,47));
+        this.transition.setPreferredSize(new Dimension(60,47));
+        
+        toolbar.add(this.startNode);
+        toolbar.add(this.transNode);
+        toolbar.add(this.endNode);
+        toolbar.add(this.transition);
+        
+        
+        northPanel.add(toolbar,1,0);
+        
         frame = new JFrame();
-        frame.setTitle("Devil Crush");
+        frame.setJMenuBar(menuBar);
+        frame.setTitle("Automata plz");
         frame.setLayout(new BorderLayout());
         frame.add(panel, BorderLayout.CENTER);
-        JLabel button;
-        frame.add(button = new JLabel("Puntaje Esperado: "), BorderLayout.EAST);
-        frame.add(button = new JLabel("Puntaje Jugador: "), BorderLayout.WEST);
-        frame.add(button = new JLabel("NORTE"), BorderLayout.NORTH);
-        frame.add(button = new JLabel("Movimientos Restantes: "), BorderLayout.SOUTH);
+        frame.add(northPanel, BorderLayout.NORTH);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -175,7 +179,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     @Override
     public void mouseReleased(MouseEvent e)
     {
-        contador = 0;
+        
     }
 
     @Override
@@ -189,6 +193,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     }
      public  void actionPerformed(ActionEvent e)
     {
+     
+        /**
         if(e.getSource()== boton1)
         {
             JDrawPanel panelLv1 = this.panelMaker();
@@ -197,6 +203,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("cleared: "+panelLv1.getCleared());
             this.frameLv1.setVisible(true);
         }
+        * */
     }
      
     public JDrawPanel panelMaker()
