@@ -58,6 +58,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private BufferedImage img;
     private ImageIcon  imgCredito;
     
+    private JLabel labelMatrix;
+    
     private static final int WIDTH = 600;
     private static final int HEIGHT =600;
     private static final int DEFAULT_SIZE = 50;
@@ -132,6 +134,20 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BorderLayout());
+        rightPanel.setSize(JPanel.HEIGHT, 200);
+        JPanel auxTitle = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        auxTitle.add(new JLabel("Transiciones"));
+        rightPanel.add(auxTitle,BorderLayout.NORTH);
+        
+        
+        JPanel mainTransitionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        this.labelMatrix = new JLabel("q0 , a , q1");
+        
+        mainTransitionPanel.add(this.labelMatrix);
+        
+        rightPanel.add(mainTransitionPanel, BorderLayout.CENTER);
         this.sigma = new JTextField();
         this.sigma.setEnabled(false);
         
@@ -164,12 +180,15 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         frame = new JFrame();
         frame.setJMenuBar(menuBar);
-        frame.setTitle("Automata plz");
+        frame.setTitle("Automata plz");        
         frame.setLayout(new BorderLayout());
         frame.add(panel, BorderLayout.CENTER);
         frame.add(northPanel, BorderLayout.NORTH);
         frame.add(southPanel, BorderLayout.SOUTH);
+        frame.add(rightPanel , BorderLayout.LINE_END);
         frame.pack();
+        frame.setResizable(false);
+        frame.setSize(new Dimension(900, 700));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         

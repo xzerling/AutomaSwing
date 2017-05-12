@@ -70,6 +70,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     
     public JDrawPanel()
     {
+        this.setBackground(Color.WHITE);
         this.setLayout(new BorderLayout());
         Dimension dimension = new Dimension(JDrawPanel.WIDTH, JDrawPanel.HEIGHT);
         this.setPreferredSize(dimension);
