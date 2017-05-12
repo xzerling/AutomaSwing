@@ -7,6 +7,7 @@ package prograproject;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -129,7 +130,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         JMenu file = new JMenu("Archivo");
         
         JPanel southPanel = new JPanel();
-        southPanel.setLayout(new BorderLayout());
+        southPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         
         this.sigma = new JTextField();
         this.sigma.setEnabled(false);
@@ -159,7 +160,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         toolbar.add(this.transition);
         
         northPanel.add(toolbar,1,0);
-        southPanel.add(this.verWord , BorderLayout.CENTER);
+        southPanel.add(this.verWord );
         
         frame = new JFrame();
         frame.setJMenuBar(menuBar);
