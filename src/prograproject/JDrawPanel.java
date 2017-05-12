@@ -68,6 +68,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean isStandNode = false;
     private boolean isTransition = false;
     
+    private Point presionado;
+    
     public JDrawPanel()
     {
         this.setBackground(Color.WHITE);
@@ -229,6 +231,12 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     public void mousePressed(MouseEvent e)
     {
         System.out.println("press");
+        
+        this.presionado = getElementAt(e.getX(), e.getY());
+        if(presionado != null)
+        {
+            System.out.println("elementoX: "+ presionado.getX() + " elementoY: " + presionado.getY());
+        }
     }
 
     @Override
@@ -338,7 +346,47 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
         this.isTransition = isTransition;
     }
     
-
-
+    public Point getElementAt(int x, int y)
+    {
+        Point finalPoint;
+        
+        for (int k = 0; k < startPoints.size(); k++) {
+            finalPoint = contains(startPoints.get(k), x, y);
+            if(finalPoint != null)
+                return finalPoint;
+        }
+        
+        for (int k = 0; k < standPoints.size(); k++) {
+            finalPoint = contains(standPoints.get(k), x, y);
+            if(finalPoint != null)
+                return finalPoint;
+        }
+        
+        for (int k = 0; k < endPoints.size(); k++) {
+            finalPoint = contains(endPoints.get(k), x, y);
+            if(finalPoint != null)
+                return finalPoint;
+        }
+        
+        return null;
+    }
+    
+    public Point contains(Point p, int x, int y)
+    {
+        if( contains2(p, x, y) )
+        {
+            return p.getLocation();
+        }
+        return null;
+    }
+    
+    public boolean contains2(Point p, double x, double y) {
+        double x0 = p.getX();
+        double y0 = p.getY();
+        return (x >= x0 &&
+                y >= y0 &&
+                x < x0 + 50 &&
+                y < y0 + 50);
+    }
 }
 
