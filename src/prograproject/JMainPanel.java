@@ -254,6 +254,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("boton1!");
             this.panelLv1.setIsEndNode(true);
         }
+        
+        if(e.getSource() == this.transition)
+        {
+            this.panelLv1.setIsTransition(true);
+        }
+        
         if(e.getSource()==verWord)
         {
             System.out.println("boton culiao!");

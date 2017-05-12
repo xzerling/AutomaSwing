@@ -61,14 +61,15 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private ArrayList<Point> startPoints;
     private ArrayList<Point> standPoints;
     private ArrayList<Point> endPoints;
-    private ArrayList<Point> transitionPoints;
+    private ArrayList<Point[]> transitionPoints;
     
     private boolean isStartNode = false;
     private boolean isEndNode = false;
     private boolean isStandNode = false;
     private boolean isTransition = false;
     
-    private Point presionado;
+    private final Point selected[] = new Point[2];
+
     
     public JDrawPanel()
     {
@@ -82,7 +83,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.startPoints = new ArrayList<>();
         this.standPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
-        this.transitionPoints = new ArrayList<>();
+        this.transitionPoints = new ArrayList<Point[]>();
         
         try{
             img = ImageIO.read(new File("src/prograproject/dc6.jpg"));            
@@ -124,6 +125,20 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 
             }
         }
+        
+        if(this.transitionPoints != null)
+        {
+            for (int k = 0; k < this.transitionPoints.size(); k++)
+            {
+                if(this.transitionPoints.get(k)[1] != null)
+                {
+                    System.out.println("p1: "+this.transitionPoints.get(k)[0] +"p2: " +this.transitionPoints.get(k)[1]);
+                    this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], g);
+                    System.out.println("dibujó");
+                }
+            }
+        }
+
     }
     
 public BufferedImage imagenAleatoria(BufferedImage img, BufferedImage img2, BufferedImage img3, 
@@ -222,7 +237,46 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
             endPoints.add(new Point(e.getPoint()));
             setIsEndNode(false);
         }
-//        System.out.println("x: " + drawPoint.getX() + " y: " + drawPoint.getY());
+        else if(this.isTransition)
+        {
+            System.out.println(this.getElementAt(e.getPoint().x, e.getPoint().y)); 
+            System.out.println("antesIF");
+//            this.printTrans();
+            if(this.selected[0] == null)
+            {
+//                System.out.println("entra PRIMERIF");
+                this.selected[0] = this.getElementAt(e.getPoint().x, e.getPoint().y);
+//                this.transitionPoints.add(this.selected[0]);
+            }
+            else
+            {
+//                System.out.println("ENTRA SEGUNDOIF");
+                this.selected[1] = this.getElementAt(e.getPoint().x, e.getPoint().y);
+                
+                Point p1 = selected[0];
+                Point p2 = selected[1];
+                System.out.println(selected[0]+"");
+                System.out.println(selected[1]+"");
+                Point localSelected[] = new Point[2];
+                localSelected[0] = p1;
+                localSelected[1] = p2;
+                
+                
+                
+                this.transitionPoints.add(localSelected);
+                this.setIsTransition(false);
+                this.printTrans();
+
+                this.flushTrans();
+//                System.out.println("FLUSH!");
+                this.printTrans();
+
+            }
+            System.out.println("FUERA CLICK");
+//                    this.printTrans();
+
+
+        }
         repaint();
         
     }
@@ -230,13 +284,7 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     @Override
     public void mousePressed(MouseEvent e)
     {
-        System.out.println("press");
-        
-        this.presionado = getElementAt(e.getX(), e.getY());
-        if(presionado != null)
-        {
-            System.out.println("elementoX: "+ presionado.getX() + " elementoY: " + presionado.getY());
-        }
+
     }
 
     @Override
@@ -387,6 +435,35 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
                 y >= y0 &&
                 x < x0 + 50 &&
                 y < y0 + 50);
+    }
+    
+    
+    public void drawLine(Point from, Point to, Graphics g)
+    {
+        g.drawLine(from.x, from.y, to.x, to.y);
+//        g.(line);
+    }
+    
+    public void flushTrans()
+    {
+        this.selected[0] = null;
+        this.selected[1] = null;
+    }
+    
+    public void printTrans()
+    {
+        System.out.println("largo trans: "+this.transitionPoints.size());
+        System.out.println("********printTrans*********");
+        for (int k = 0; k < this.transitionPoints.size(); k++)
+            {
+                System.out.println("k: "+k+" p1: "+this.transitionPoints.get(k)[0] +" p2: " +this.transitionPoints.get(k)[1]);
+            }
+//        System.out.println("largo selected: " + selected.length);
+        for (int k = 0; k < selected.length; k++)
+        {
+            System.out.println("selected" + k +": " + selected[k]);
+            
+        }
     }
 }
 
