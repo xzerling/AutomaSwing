@@ -20,10 +20,9 @@ public class Automaton
         this.transitions = new ArrayList<>();
         this.finalStates = fs;
         this.input = in;
-        verify();
     }
     
-    private void verify()
+    public boolean verify()
     {
         String initial = initialState;
         char[] array = input.toCharArray();
@@ -38,9 +37,12 @@ public class Automaton
                 if(transitions.get(j).getStart().equals(initial) && transitions.get(j).getSymbol() == sym)
                 {
                     initial = transitions.get(j).getEnd();
+                    finState = finalStates.contains(initial);
                 }
             }
         }
+        
+        return finState;
     }
 }
 
