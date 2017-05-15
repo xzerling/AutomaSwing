@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -56,7 +57,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private JTextField inputWord;
     
     private BufferedImage img;
-    private ImageIcon  imgCredito;
+    private ImageIcon  imgbutton1;
+    private ImageIcon  imgbutton2;
+    private ImageIcon  imgbutton3;
+    private ImageIcon  imgbutton4;
     
     private JLabel labelMatrix;
     
@@ -75,7 +79,25 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseListener(this);
         super.addMouseMotionListener(this);
         
-        this.imgCredito = new ImageIcon("src/prograproject/penis-icon.png");
+        ImageIcon icon = new ImageIcon("src/prograproject/dc6.png");
+        Image img = icon.getImage() ;  
+        Image newimg = img.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton1 = new ImageIcon(newimg);
+        
+        ImageIcon icon2 = new ImageIcon("src/prograproject/dc4.png");
+        Image img2 = icon2.getImage() ;  
+        Image newimg2 = img2.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton2 = new ImageIcon(newimg2);
+        
+        ImageIcon icon3 = new ImageIcon("src/prograproject/dc7.png");
+        Image img3 = icon3.getImage() ;  
+        Image newimg3 = img3.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton3 = new ImageIcon(newimg3);
+        
+        ImageIcon icon4 = new ImageIcon("src/prograproject/arrow.png");
+        Image img4 = icon4.getImage() ;  
+        Image newimg4 = img4.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton4 = new ImageIcon(newimg4);
         
 
         
@@ -136,10 +158,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.endNode = new JButton();
         this.transition = new JButton();
         
-        this.startNode.setIcon(imgCredito);
-        this.transNode.setIcon(imgCredito);
-        this.endNode.setIcon(imgCredito);
-        this.transition.setIcon(imgCredito);
+        this.startNode.setIcon(imgbutton1);
+        this.transNode.setIcon(imgbutton2);
+        this.endNode.setIcon(imgbutton3);
+        this.transition.setIcon(imgbutton4);
         
         this.verWord = new JButton("Verificar palabra");
         this.verWord.setBounds(120,10 ,150 ,20);
