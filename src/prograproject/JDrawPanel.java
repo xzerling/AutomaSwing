@@ -86,9 +86,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.transitionPoints = new ArrayList<Point[]>();
         
         try{
-            img = ImageIO.read(new File("src/prograproject/dc6.jpg"));            
-            img2 = ImageIO.read(new File("src/prograproject/dc4.jpg"));            
-            img3 = ImageIO.read(new File("src/prograproject/dc7.jpg"));            
+            img = ImageIO.read(new File("src/prograproject/dc6.png"));            
+            img2 = ImageIO.read(new File("src/prograproject/dc4.png"));            
+            img3 = ImageIO.read(new File("src/prograproject/dc7.png"));            
             }
             catch(IOException e)
             {
