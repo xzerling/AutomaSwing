@@ -107,6 +107,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         endNode.addActionListener(this);
         transition.addActionListener(this);
         verWord.addActionListener(this);
+        
+        transNode.setEnabled(false);
+        endNode.setEnabled(false);
+        transition.setEnabled(false);
 //        this.add(startNode);
         
 //        boton1.addActionListener(this);
@@ -241,22 +245,29 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("boton1!");
             this.panelLv1.setIsStartNode(true);
             startNode.setEnabled(false);
+            
+            transNode.setEnabled(true);
+            endNode.setEnabled(true);
+            transition.setEnabled(true);
         }
         
         if(e.getSource()==transNode)
         {
+            this.panelLv1.resetBools();
             System.out.println("boton1!");
             this.panelLv1.setIsStandNode(true);
         }
         
         if(e.getSource()==endNode)
         {
+            this.panelLv1.resetBools();
             System.out.println("boton1!");
             this.panelLv1.setIsEndNode(true);
         }
         
         if(e.getSource() == this.transition)
         {
+            this.panelLv1.resetBools();
             this.panelLv1.setIsTransition(true);
         }
         

@@ -69,6 +69,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean isTransition = false;
     
     private final Point selected[] = new Point[2];
+    private Point select = new Point();
 
     
     public JDrawPanel()
@@ -105,7 +106,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < startPoints.size(); i++) {
-                g.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, 50, 50, this);
+                g.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
 
             }
         }
@@ -113,7 +114,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < standPoints.size(); i++) {
-                g.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, 50, 50, this);
+                g.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
 
             }
         }
@@ -221,18 +222,18 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     public void mouseClicked(MouseEvent e)
     {
         System.out.println("click");
-        if(isIsStartNode())
+        if(isIsStartNode() && !overlap(e))
         {
             startPoints.add(new Point(e.getPoint()));
             setIsStartNode(false);
             
         }
-        else if(isStandNode)
+        else if(isStandNode && !overlap(e))
         {
             standPoints.add(new Point(e.getPoint()));
             setIsStandNode(false);
         }
-        else if(isEndNode)
+        else if(isEndNode && !overlap(e))
         {
             endPoints.add(new Point(e.getPoint()));
             setIsEndNode(false);
@@ -284,7 +285,7 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     @Override
     public void mousePressed(MouseEvent e)
     {
-
+        select = this.getElementAt(e.getX(), e.getY());
     }
 
     @Override
@@ -393,6 +394,15 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     public void setIsTransition(boolean isTransition) {
         this.isTransition = isTransition;
     }
+
+    public Point getSelect() {
+        return select;
+    }
+
+    public void setSelect(Point select) {
+        this.select = select;
+    }
+       
     
     public Point getElementAt(int x, int y)
     {
@@ -433,8 +443,8 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
         double y0 = p.getY();
         return (x >= x0 &&
                 y >= y0 &&
-                x < x0 + 50 &&
-                y < y0 + 50);
+                x < x0 + DEFAULT_SIZE &&
+                y < y0 + DEFAULT_SIZE);
     }
     
     
@@ -464,6 +474,39 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
             System.out.println("selected" + k +": " + selected[k]);
             
         }
+    }
+
+    private boolean overlap(MouseEvent e) 
+    {
+        if(this.select != null)
+        {
+            System.out.println("presionado!");
+            return true;
+        }
+        if(getElementAt(e.getX() + DEFAULT_SIZE, e.getY() + DEFAULT_SIZE) != null)
+        {
+            System.out.println("choca la weaaaa!!");
+            return true;
+        }
+        if(getElementAt(e.getX()+ DEFAULT_SIZE, e.getY()) != null)
+        {
+            System.out.println("choca la weaaaa!!");
+            return true;
+        }
+        if(getElementAt(e.getX(), e.getY() + DEFAULT_SIZE) != null)
+        {
+            System.out.println("choca la weaaaa!!");
+            return true;
+        }
+        System.out.println("false!!!!!!!!!!!!!!!!!!!!");
+        return false;
+    }
+    
+    public void resetBools()
+    {
+        this.setIsStandNode(false);
+        this.setIsEndNode(false);
+        this.setIsTransition(false);
     }
 }
 
