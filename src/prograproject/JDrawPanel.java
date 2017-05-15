@@ -37,26 +37,13 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     
     private static final int WIDTH = 600;
     private static final int HEIGHT =600;
-    private static final int DEFAULT_SIZE = 50;
-    private int filas = 9;
-    private int columnas = 9;
-    private int i;
-    private int j;
+    private static final int DEFAULT_SIZE = 75;
+    private static final int DEFAULT_LINE_SIZE = 38;
+
     
-    private boolean cleared = false;
-    
-    private double cantidadImagenes = 6.0;
     private BufferedImage img;
     private BufferedImage img2;
     private BufferedImage img3;
-    private BufferedImage img4;
-    
-    private int filaInicial;
-    private int columnaInicial;
-    int contador = 0;
-    int puntaje = 0;
-    private int puntajeNivel = 0;
-    private int movimientosNivel = -1;
     
     private ArrayList<Point> startPoints;
     private ArrayList<Point> standPoints;
@@ -122,7 +109,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < endPoints.size(); i++) {
-                g.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, 50, 50, this);
+                g.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
 
             }
         }
@@ -141,76 +128,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         }
 
     }
-    
-public BufferedImage imagenAleatoria(BufferedImage img, BufferedImage img2, BufferedImage img3, 
-BufferedImage img4,BufferedImage img5, BufferedImage img6)
-{
-    float aleatorio = (float)Math.random();
-//    System.out.println("aleatorio: " + aleatorio);
-    
-   
-    if(aleatorio <= 1.0/cantidadImagenes)
-    {
-        return img;      
-    }
-    else if(aleatorio >=  1.0/cantidadImagenes && aleatorio <= 2.0/cantidadImagenes)
-    {
-        return img2;
-    }
-    
-    else if(aleatorio >= 2.0/cantidadImagenes && aleatorio <= 3.0/cantidadImagenes )
-    {
-        return img3;
-    }
-    
-    else if(aleatorio >= 3.0/cantidadImagenes && aleatorio <= 4.0/cantidadImagenes)
-    {
-        return img4;
-    }
-    
-    else if(aleatorio >= 4.0/cantidadImagenes && aleatorio <= 5.0/cantidadImagenes)
-    {
-        return img5;
-    }
-    else if(aleatorio >= 5.0/cantidadImagenes)
-    {
-        return img6;
-    }
-    return null;
-}
-
-public BufferedImage imagenEspecial(Color color, BufferedImage img, BufferedImage img2, BufferedImage img3, 
-BufferedImage img4,BufferedImage img5, BufferedImage img6)
-{
-    if(color.equals(Color.ORANGE))
-    {
-        return img;
-    }
-    
-    if(color.equals(Color.RED))
-    {
-        return img2;
-    }
-    
-    if(color.equals(Color.MAGENTA))
-    {
-        return img3;
-    }
-    if(color.equals(Color.YELLOW))
-    {
-        return img4;
-    }
-    if(color.equals(Color.BLUE))
-    {
-        return img5;
-    }
-    if(color.equals(Color.GREEN))
-    {
-        return img6;
-    }
-    return null;
-}
-
 
 
     @Override
@@ -298,7 +215,6 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     @Override
     public void mouseReleased(MouseEvent e)
     {
-        contador = 0;
     }
 
     @Override
@@ -315,52 +231,6 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     @Override
     public void actionPerformed(ActionEvent e)
     {
-    }
-
-
-    
-
-    public int getPuntajeNivel()
-    {
-        return puntajeNivel;
-    }
-
-    public void setPuntajeNivel(int puntajeNivel)
-    {
-        this.puntajeNivel = puntajeNivel;
-    }
-
-    public int getMovimientosNivel()
-    {
-        return movimientosNivel;
-    }
-
-    public void setMovimientosNivel(int movimientosNivel)
-    {
-        this.movimientosNivel = movimientosNivel;
-    }
-
-    public int getPuntaje()
-    {
-        return puntaje;
-    }
-    
-    public void levelClear()
-    {
-        if (this.puntaje >= puntajeNivel)
-        {
-            this.cleared = true;
-        }
-    }
-    
-    public boolean levelFail(int mov)
-    {
-        return mov == 0;
-    }
-
-    boolean getCleared()
-    {
-        return this.cleared;
     }
 
     public boolean isIsStartNode() {
@@ -450,7 +320,7 @@ BufferedImage img4,BufferedImage img5, BufferedImage img6)
     
     public void drawLine(Point from, Point to, Graphics g)
     {
-        g.drawLine(from.x, from.y, to.x, to.y);
+        g.drawLine(from.x+DEFAULT_LINE_SIZE, from.y+DEFAULT_LINE_SIZE, to.x+DEFAULT_LINE_SIZE, to.y+DEFAULT_LINE_SIZE);
 //        g.(line);
     }
     

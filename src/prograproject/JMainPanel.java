@@ -63,12 +63,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private static final int WIDTH = 600;
     private static final int HEIGHT =600;
     private static final int DEFAULT_SIZE = 50;
-    private int filas = 9;
-    private int columnas = 9;
-    private int i;
-    private int j;
     
-    private BufferedImage fondo;
     private JDrawPanel panelLv1;
     
     public JMainPanel()
@@ -80,26 +75,14 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseListener(this);
         super.addMouseMotionListener(this);
         
+        this.imgCredito = new ImageIcon("src/prograproject/penis-icon.png");
+        
+
         
         this.panelLv1 = this.panelMaker();
         frameLv1 = frameMaker(panelLv1);
         frameLv1.setVisible(false);
-        System.out.println("cleared: "+panelLv1.getCleared());
         this.frameLv1.setVisible(true);
-        
-        //Dimension dimension = new Dimension(JMainPanel.WIDTH, JMainPanel.HEIGHT);
-//        Dimension dimension = new Dimension(600, 600);
-//        setLayout(null);
-//        this.setPreferredSize(dimension);
-//        this.setOpaque(false);
-//        boton1 = new JButton("Jugar");
-//        boton1.setBounds(270,250,130,30);
-//        boton2 = new JButton("Como Jugar");
-//        boton2.setBounds(270,285,130,30);
-//        boton3 = new JButton("Altos puntajes");
-//        boton3.setBounds(270,320,130,30);
-//        boton4 = new JButton("Acerca de...");
-//        boton4.setBounds(270,355,130,30);
         
         
         startNode.addActionListener(this);
@@ -111,20 +94,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         transNode.setEnabled(false);
         endNode.setEnabled(false);
         transition.setEnabled(false);
-//        this.add(startNode);
-        
-//        boton1.addActionListener(this);
-
-        
-
-        try{
-            fondo = ImageIO.read(new File("src/fondojuego.jpg"));            
-            
-            }
-            catch(IOException e)
-            {
-            }
-        
         
     }
 
@@ -161,18 +130,30 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         JToolBar toolbar = new JToolBar();
         
-        this.startNode = new JButton("Str Node");
-        this.transNode = new JButton("Trs Node");
-        this.endNode = new JButton("End Node");
-        this.transition = new JButton(" Trans  ");
+        toolbar.setFloatable(false);
+        this.startNode = new JButton();
+        this.transNode = new JButton();
+        this.endNode = new JButton();
+        this.transition = new JButton();
+        
+        this.startNode.setIcon(imgCredito);
+        this.transNode.setIcon(imgCredito);
+        this.endNode.setIcon(imgCredito);
+        this.transition.setIcon(imgCredito);
         
         this.verWord = new JButton("Verificar palabra");
         this.verWord.setBounds(120,10 ,150 ,20);
         
-        this.startNode.setPreferredSize(new Dimension(60,47));
-        this.transNode.setPreferredSize(new Dimension(60,47));
-        this.endNode.setPreferredSize(new Dimension(60,47));
-        this.transition.setPreferredSize(new Dimension(60,47));
+        this.startNode.setPreferredSize(new Dimension(64,64));
+        this.transNode.setPreferredSize(new Dimension(64,64));
+        this.endNode.setPreferredSize(new Dimension(64,64));
+        this.transition.setPreferredSize(new Dimension(64,64));
+        
+        startNode.setMaximumSize(new Dimension(64,64));
+        transNode.setMaximumSize(new Dimension(64,64));
+        endNode.setMaximumSize(new Dimension(64,64));
+        transition.setMaximumSize(new Dimension(64,64));
+
         
         toolbar.add(this.startNode);
         toolbar.add(this.transNode);
@@ -215,13 +196,11 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     @Override
     public void mousePressed(MouseEvent e)
     {
-        System.out.println("juan");
     }
 
     @Override
     public void mouseDragged(MouseEvent e)
     {
-        System.out.println("Jolape!");
     }
     @Override
     public void mouseReleased(MouseEvent e)
@@ -242,7 +221,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     {
         if(e.getSource()==startNode)
         {
-            System.out.println("boton1!");
             this.panelLv1.setIsStartNode(true);
             startNode.setEnabled(false);
             
@@ -254,14 +232,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         if(e.getSource()==transNode)
         {
             this.panelLv1.resetBools();
-            System.out.println("boton1!");
             this.panelLv1.setIsStandNode(true);
         }
         
         if(e.getSource()==endNode)
         {
             this.panelLv1.resetBools();
-            System.out.println("boton1!");
             this.panelLv1.setIsEndNode(true);
         }
         
@@ -273,7 +249,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource()==verWord)
         {
-            System.out.println("boton culiao!");
             this.dialog = new Dialogs();
             
             this.dialog.setVisible(true);
