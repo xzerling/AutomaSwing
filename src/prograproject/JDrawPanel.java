@@ -122,7 +122,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 {
                     System.out.println("p1: "+this.transitionPoints.get(k)[0] +"p2: " +this.transitionPoints.get(k)[1]);
                     this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], g);
-                    System.out.println("dibujó");
+//                    this.repaintNodes(g);
+
+                    System.out.println("dibujó");   
                 }
             }
         }
@@ -321,7 +323,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     public void drawLine(Point from, Point to, Graphics g)
     {
         g.drawLine(from.x+DEFAULT_LINE_SIZE, from.y+DEFAULT_LINE_SIZE, to.x+DEFAULT_LINE_SIZE, to.y+DEFAULT_LINE_SIZE);
-//        g.(line);
     }
     
     public void flushTrans()
@@ -355,17 +356,17 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         }
         if(getElementAt(e.getX() + DEFAULT_SIZE, e.getY() + DEFAULT_SIZE) != null)
         {
-            System.out.println("choca la weaaaa!!");
+            System.out.println("choca");
             return true;
         }
         if(getElementAt(e.getX()+ DEFAULT_SIZE, e.getY()) != null)
         {
-            System.out.println("choca la weaaaa!!");
+            System.out.println("choca");
             return true;
         }
         if(getElementAt(e.getX(), e.getY() + DEFAULT_SIZE) != null)
         {
-            System.out.println("choca la weaaaa!!");
+            System.out.println("choca");
             return true;
         }
         System.out.println("false!!!!!!!!!!!!!!!!!!!!");
@@ -378,5 +379,34 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.setIsEndNode(false);
         this.setIsTransition(false);
     }
+    
+    public void repaintNodes(Graphics g)
+    {
+        if (startPoints != null)
+        {
+//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
+            for (int i = 0; i < startPoints.size(); i++) {
+                g.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+
+            }
+        }
+        if (standPoints != null)
+        {
+//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
+            for (int i = 0; i < standPoints.size(); i++) {
+                g.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+
+            }
+        }
+        if (endPoints != null)
+        {
+//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
+            for (int i = 0; i < endPoints.size(); i++) {
+                g.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+
+            }
+        }
+    }
+    
 }
 
