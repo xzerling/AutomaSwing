@@ -14,16 +14,19 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.scene.shape.Line;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -84,16 +87,19 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         
     }
     
+    
+    //pinta los nodos y las lineas de trans
     @Override
     public void paint(Graphics g)
     {
         super.paint(g);
+        Graphics2D g2 = (Graphics2D) g;
         
         if (startPoints != null)
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < startPoints.size(); i++) {
-                g.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g2.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
 
             }
         }
@@ -101,7 +107,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < standPoints.size(); i++) {
-                g.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g2.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
 
             }
         }
@@ -109,7 +115,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
 //            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < endPoints.size(); i++) {
-                g.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g2.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
 
             }
         }
@@ -121,9 +127,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 if(this.transitionPoints.get(k)[1] != null)
                 {
                     System.out.println("p1: "+this.transitionPoints.get(k)[0] +"p2: " +this.transitionPoints.get(k)[1]);
-                    this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], g);
-//                    this.repaintNodes(g);
-
+                    this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], g2);
+                    this.repaintNodes(g);
                     System.out.println("dibujó");   
                 }
             }
@@ -320,9 +325,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     }
     
     
-    public void drawLine(Point from, Point to, Graphics g)
+    public void drawLine(Point from, Point to, Graphics2D g)
     {
+        
         g.drawLine(from.x+DEFAULT_LINE_SIZE, from.y+DEFAULT_LINE_SIZE, to.x+DEFAULT_LINE_SIZE, to.y+DEFAULT_LINE_SIZE);
+        g.drawString("FUCK YOU!!", (from.x+to.x+2*DEFAULT_LINE_SIZE-30)/2, (from.y+to.y+2*DEFAULT_LINE_SIZE)/2); 
     }
     
     public void flushTrans()
