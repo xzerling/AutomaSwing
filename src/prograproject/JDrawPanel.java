@@ -382,6 +382,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("choca");
             return true;
         }
+        /*if(isLine(e.getX(), e.getY()))
+        {
+            System.out.println("hay linea!");
+            return true;
+        }*/
         System.out.println("false!!!!!!!!!!!!!!!!!!!!");
         return false;
     }
@@ -433,6 +438,47 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             return ("q"+states.get(states.size() - 1));
         }
             
+    }
+
+    private boolean isLine(int x, int y)
+    {
+        int x1;
+        int x2;
+        int y1;
+        int y2;
+        int m;
+        int pos;
+        int t;
+        
+        for (int i = 0; i < transitionPoints.size(); i++)
+        {
+            x1 = transitionPoints.get(i)[0].getPoint().x;
+            y1 = transitionPoints.get(i)[0].getPoint().y;
+            x2 = transitionPoints.get(i)[1].getPoint().x;
+            y2 = transitionPoints.get(i)[1].getPoint().y;
+            
+            System.out.println("x1: " + x1);
+            System.out.println("y1: " + y1);
+            System.out.println("x2: " + x2);
+            System.out.println("y2: " + y2);
+            
+            m = (x2-(x1))/(y1-(y2));
+            System.out.println("M: " + m);
+            
+            t = 1;
+            pos = x1 + m*t;
+            
+            while(pos <= x2)
+            {
+                pos = x1 + m*t;
+                t++;
+                System.out.println("recta: " + pos);
+                if(pos == x)    //contains
+                    return true;
+                
+            }
+        }
+        return false;
     }
     
 }
