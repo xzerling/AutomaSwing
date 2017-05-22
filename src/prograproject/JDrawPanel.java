@@ -48,9 +48,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private BufferedImage img2;
     private BufferedImage img3;
     
-    private ArrayList<Point> startPoints;
-    private ArrayList<Point> standPoints;
-    private ArrayList<Point> endPoints;
+    private ArrayList<State> startPoints;
+    private ArrayList<State> standPoints;
+    private ArrayList<State> endPoints;
     private ArrayList<Point[]> transitionPoints;
     
     private boolean isStartNode = false;
@@ -58,8 +58,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean isStandNode = false;
     private boolean isTransition = false;
     
-    private final Point selected[] = new Point[2];
-    private Point select = new Point();
+    private final State selected[] = new State[2];
+    private State select = new State(null, null);
+    private ArrayList<Integer> states;
 
     
     public JDrawPanel()
@@ -75,6 +76,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.standPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
         this.transitionPoints = new ArrayList<Point[]>();
+        this.states = new ArrayList<>();
         
         try{
             img = ImageIO.read(new File("src/prograproject/dc6.png"));            
@@ -97,26 +99,23 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         
         if (startPoints != null)
         {
-//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < startPoints.size(); i++) {
-                g2.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-
+                g2.drawImage(img, startPoints.get(i).getPoint().x, startPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g.drawString(startPoints.get(i).getState(), startPoints.get(i).getPoint().x + DEFAULT_SIZE/2, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 5);
             }
         }
         if (standPoints != null)
         {
-//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < standPoints.size(); i++) {
-                g2.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-
+                g2.drawImage(img2, standPoints.get(i).getPoint().x, standPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 2);
             }
         }
         if (endPoints != null)
         {
-//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < endPoints.size(); i++) {
-                g2.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-
+                g2.drawImage(img3, endPoints.get(i).getPoint().x, endPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 3);
             }
         }
         
@@ -148,18 +147,18 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         System.out.println("click");
         if(isIsStartNode() && !overlap(e))
         {
-            startPoints.add(new Point(e.getPoint()));
+            startPoints.add(new State(e.getPoint(), labelMaker(states)));
             setIsStartNode(false);
             
         }
         else if(isStandNode && !overlap(e))
         {
-            standPoints.add(new Point(e.getPoint()));
+            standPoints.add(new State(e.getPoint(), labelMaker(states)));
             setIsStandNode(false);
         }
         else if(isEndNode && !overlap(e))
         {
-            endPoints.add(new Point(e.getPoint()));
+            endPoints.add(new State(e.getPoint(), labelMaker(states)));
             setIsEndNode(false);
         }
         else if(this.isTransition)
@@ -178,8 +177,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 //                System.out.println("ENTRA SEGUNDOIF");
                 this.selected[1] = this.getElementAt(e.getPoint().x, e.getPoint().y);
                 
-                Point p1 = selected[0];
-                Point p2 = selected[1];
+                Point p1 = selected[0].getPoint();
+                Point p2 = selected[1].getPoint();
                 System.out.println(selected[0]+"");
                 System.out.println(selected[1]+"");
                 Point localSelected[] = new Point[2];
@@ -272,18 +271,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.isTransition = isTransition;
     }
 
-    public Point getSelect() {
-        return select;
-    }
-
-    public void setSelect(Point select) {
-        this.select = select;
-    }
        
     
-    public Point getElementAt(int x, int y)
+    public State getElementAt(int x, int y)
     {
-        Point finalPoint;
+        State finalPoint;
         
         for (int k = 0; k < startPoints.size(); k++) {
             finalPoint = contains(startPoints.get(k), x, y);
@@ -306,11 +298,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         return null;
     }
     
-    public Point contains(Point p, int x, int y)
+    public State contains(State p, int x, int y)
     {
-        if( contains2(p, x, y) )
+        if( contains2(p.getPoint(), x, y) )
         {
-            return p.getLocation();
+            return p;
         }
         return null;
     }
@@ -391,28 +383,42 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     {
         if (startPoints != null)
         {
-//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < startPoints.size(); i++) {
-                g.drawImage(img, startPoints.get(i).x, startPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-
+                g.drawImage(img, startPoints.get(i).getPoint().x, startPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g.drawString(startPoints.get(i).getState(), startPoints.get(i).getPoint().x + DEFAULT_SIZE/2, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 5);
             }
         }
         if (standPoints != null)
         {
-//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < standPoints.size(); i++) {
-                g.drawImage(img2, standPoints.get(i).x, standPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-
+                g.drawImage(img2, standPoints.get(i).getPoint().x, standPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 2);
             }
         }
         if (endPoints != null)
         {
-//            g.drawImage(img, drawPoint.x, drawPoint.y, this);
             for (int i = 0; i < endPoints.size(); i++) {
-                g.drawImage(img3, endPoints.get(i).x, endPoints.get(i).y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-
+                g.drawImage(img3, endPoints.get(i).getPoint().x, endPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
+                g.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 3);
             }
         }
+    }
+    
+    public String labelMaker(ArrayList<Integer> states)
+    {
+        if(states == null)
+        {
+            states.add(0);
+            return ("q"+states.get(0));
+        }
+        else
+        {
+            Integer local = (states.size() - 1);
+            local++;
+            states.add(local);
+            return ("q"+states.get(states.size() - 1));
+        }
+            
     }
     
 }
