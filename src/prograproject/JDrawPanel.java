@@ -10,6 +10,7 @@ package prograproject;
  * and open the template in the editor.
  */
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -96,6 +97,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
+        
+        g2.setStroke(new BasicStroke(5));   
         
         if (startPoints != null)
         {
