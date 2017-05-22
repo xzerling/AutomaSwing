@@ -46,7 +46,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     
     private JButton verWord;
     
-    private Dialogs dialog;
+    private Dialog dialog;
     
     JFrame frame;
     JFrame creditos;
@@ -271,8 +271,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource()==verWord)
         {
-            this.dialog = new Dialogs();
-            
+            this.dialog = new Dialog();
+            this.dialog.setTextLabel("Palabra :");
+            this.dialog.setInstructions("Ingrese palabra a verificar");
             this.dialog.setVisible(true);
         }
     }
