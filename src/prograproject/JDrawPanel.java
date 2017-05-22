@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -188,7 +189,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 State p2 = selected[1];
                 //etiqueta como parametro de state, point queda null
                 //
-                State p3 = new State(null, "hitler");
+                State p3 = new State(null, "a");
                 this.selected[2] = p3;
                 
                 System.out.println(selected[0].getPoint()+"");
@@ -334,10 +335,14 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     
     public void drawLine(State from, State to, State label, Graphics2D g)
     {
-        
+        int lambda = 10;
         g.drawLine(from.getPoint().x+DEFAULT_LINE_SIZE, from.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().x+DEFAULT_LINE_SIZE, to.getPoint().y+DEFAULT_LINE_SIZE);
-        g.drawString(label.getState(), (from.getPoint().x+to.getPoint().x+2*DEFAULT_LINE_SIZE-30)/2, (from.getPoint().y+to.getPoint().y+2*DEFAULT_LINE_SIZE)/2); 
+        g.drawString(label.getState(), (from.getPoint().x+to.getPoint().x+2*DEFAULT_LINE_SIZE-30)/2, (from.getPoint().y+to.getPoint().y+2*DEFAULT_LINE_SIZE)/2);
+        Polygon poly = new Polygon(new int[] {to.getPoint().x, to.getPoint().x-lambda, to.getPoint().x-lambda}, new int[] {to.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().y+lambda+10, to.getPoint().y+DEFAULT_SIZE-20}, 3);
+//        g.drawPolygon(poly);
+
     }
+    
     
     public void flushTrans()
     {
