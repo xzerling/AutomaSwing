@@ -51,7 +51,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private ArrayList<State> startPoints;
     private ArrayList<State> standPoints;
     private ArrayList<State> endPoints;
-    private ArrayList<Point[]> transitionPoints;
+    private ArrayList<State[]> transitionPoints;
     
     private boolean isStartNode = false;
     private boolean isEndNode = false;
@@ -75,7 +75,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.startPoints = new ArrayList<>();
         this.standPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
-        this.transitionPoints = new ArrayList<Point[]>();
+        this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
         
         try{
@@ -125,8 +125,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             {
                 if(this.transitionPoints.get(k)[1] != null)
                 {
-                    System.out.println("p1: "+this.transitionPoints.get(k)[0] +"p2: " +this.transitionPoints.get(k)[1]);
-                    this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], g2);
+                    System.out.println("p1: "+this.transitionPoints.get(k)[0].getPoint() +"p2: " +this.transitionPoints.get(k)[1].getPoint());
+                    this.drawLine(this.transitionPoints.get(k)[0].getPoint(), this.transitionPoints.get(k)[1].getPoint(), g2);
                     this.repaintNodes(g);
                     System.out.println("dibujó");   
                 }
@@ -165,7 +165,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
             System.out.println(this.getElementAt(e.getPoint().x, e.getPoint().y)); 
             System.out.println("antesIF");
-//            this.printTrans();
+            this.printTrans();
             if(this.selected[0] == null)
             {
 //                System.out.println("entra PRIMERIF");
@@ -177,11 +177,12 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 //                System.out.println("ENTRA SEGUNDOIF");
                 this.selected[1] = this.getElementAt(e.getPoint().x, e.getPoint().y);
                 
-                Point p1 = selected[0].getPoint();
-                Point p2 = selected[1].getPoint();
-                System.out.println(selected[0]+"");
-                System.out.println(selected[1]+"");
-                Point localSelected[] = new Point[2];
+                State p1 = selected[0];
+                State p2 = selected[1];
+                System.out.println(selected[0].getPoint()+"");
+                System.out.println(selected[1].getPoint()+"");
+                
+                State localSelected[] = new State[2];
                 localSelected[0] = p1;
                 localSelected[1] = p2;
                 
@@ -336,7 +337,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         System.out.println("********printTrans*********");
         for (int k = 0; k < this.transitionPoints.size(); k++)
             {
-                System.out.println("k: "+k+" p1: "+this.transitionPoints.get(k)[0] +" p2: " +this.transitionPoints.get(k)[1]);
+                System.out.println("k: "+k+" p1: "+this.transitionPoints.get(k)[0].getState() +" p2: " +this.transitionPoints.get(k)[1].getState());
             }
 //        System.out.println("largo selected: " + selected.length);
         for (int k = 0; k < selected.length; k++)
