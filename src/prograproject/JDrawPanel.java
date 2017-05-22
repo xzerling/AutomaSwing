@@ -59,7 +59,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean isStandNode = false;
     private boolean isTransition = false;
     
-    private final State selected[] = new State[2];
+    //[0]in, [1] out, [2] label
+    private final State selected[] = new State[3];
     private State select = new State(null, null);
     private ArrayList<Integer> states;
 
@@ -129,7 +130,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 if(this.transitionPoints.get(k)[1] != null)
                 {
                     System.out.println("p1: "+this.transitionPoints.get(k)[0].getPoint() +"p2: " +this.transitionPoints.get(k)[1].getPoint());
-                    this.drawLine(this.transitionPoints.get(k)[0].getPoint(), this.transitionPoints.get(k)[1].getPoint(), g2);
+                    this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], this.transitionPoints.get(k)[2], g2);
                     this.repaintNodes(g);
                     System.out.println("dibujó");   
                 }
@@ -180,14 +181,24 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 //                System.out.println("ENTRA SEGUNDOIF");
                 this.selected[1] = this.getElementAt(e.getPoint().x, e.getPoint().y);
                 
+                /* llamada a metodo que pide la etiqueta de la transicion
+                    se guarda el string en una variable temporal
+                */
                 State p1 = selected[0];
                 State p2 = selected[1];
+                //etiqueta como parametro de state, point queda null
+                //
+                State p3 = new State(null, "hitler");
+                this.selected[2] = p3;
+                
                 System.out.println(selected[0].getPoint()+"");
                 System.out.println(selected[1].getPoint()+"");
+                System.out.println(selected[2].getState()+"");
                 
-                State localSelected[] = new State[2];
+                State localSelected[] = new State[3];
                 localSelected[0] = p1;
                 localSelected[1] = p2;
+                localSelected[2] = p3;
                 
                 
                 
@@ -321,11 +332,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     }
     
     
-    public void drawLine(Point from, Point to, Graphics2D g)
+    public void drawLine(State from, State to, State label, Graphics2D g)
     {
         
-        g.drawLine(from.x+DEFAULT_LINE_SIZE, from.y+DEFAULT_LINE_SIZE, to.x+DEFAULT_LINE_SIZE, to.y+DEFAULT_LINE_SIZE);
-        g.drawString("FUCK YOU!!", (from.x+to.x+2*DEFAULT_LINE_SIZE-30)/2, (from.y+to.y+2*DEFAULT_LINE_SIZE)/2); 
+        g.drawLine(from.getPoint().x+DEFAULT_LINE_SIZE, from.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().x+DEFAULT_LINE_SIZE, to.getPoint().y+DEFAULT_LINE_SIZE);
+        g.drawString(label.getState(), (from.getPoint().x+to.getPoint().x+2*DEFAULT_LINE_SIZE-30)/2, (from.getPoint().y+to.getPoint().y+2*DEFAULT_LINE_SIZE)/2); 
     }
     
     public void flushTrans()
@@ -346,7 +357,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         for (int k = 0; k < selected.length; k++)
         {
             System.out.println("selected" + k +": " + selected[k]);
-            
         }
     }
 

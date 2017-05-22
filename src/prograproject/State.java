@@ -9,7 +9,15 @@ import java.awt.Point;
 
 /**
  *
- * @author Zerling
+ * @author Juan
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
  */
 public class State {
     private Point point;
