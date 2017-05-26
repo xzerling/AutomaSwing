@@ -152,9 +152,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         System.out.println("click");
         if(isIsStartNode() && !overlap(e))
         {
-            startPoints.add(new State(e.getPoint(), labelMaker(states)));
+            State state = new State(e.getPoint(), labelMaker(states));
+            startPoints.add(state);
             setIsStartNode(false);
-            
         }
         else if(isStandNode && !overlap(e))
         {
@@ -365,7 +365,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         }
     }
 
-    private boolean overlap(MouseEvent e) 
+    public boolean overlap(MouseEvent e) 
     {
         if(this.select != null)
         {
@@ -387,11 +387,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("choca");
             return true;
         }
-        /*if(isLine(e.getX(), e.getY()))
+        if(isLine(e.getX(), e.getY()))
         {
             System.out.println("hay linea!");
             return true;
-        }*/
+        }
         System.out.println("false!!!!!!!!!!!!!!!!!!!!");
         return false;
     }
@@ -452,33 +452,40 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         int y1;
         int y2;
         int m;
-        int pos;
+        int posX;
+        int posY;
         int t;
         
         for (int i = 0; i < transitionPoints.size(); i++)
         {
-            x1 = transitionPoints.get(i)[0].getPoint().x;
-            y1 = transitionPoints.get(i)[0].getPoint().y;
-            x2 = transitionPoints.get(i)[1].getPoint().x;
-            y2 = transitionPoints.get(i)[1].getPoint().y;
+            x1 = transitionPoints.get(i)[0].getPoint().x + DEFAULT_LINE_SIZE;
+            y1 = transitionPoints.get(i)[0].getPoint().y + DEFAULT_LINE_SIZE;
+            x2 = transitionPoints.get(i)[1].getPoint().x + DEFAULT_LINE_SIZE;
+            y2 = transitionPoints.get(i)[1].getPoint().y + DEFAULT_LINE_SIZE;
             
             System.out.println("x1: " + x1);
             System.out.println("y1: " + y1);
             System.out.println("x2: " + x2);
             System.out.println("y2: " + y2);
             
-            m = (x2-(x1))/(y1-(y2));
+            m =  (x2-(x1))/(y1-(y2));
             System.out.println("M: " + m);
             
             t = 1;
-            pos = x1 + m*t;
+            posX = x1 + m*t;
+//          posY = y1 + m*t;
             
-            while(pos <= x2)
+//            System.out.println("!!!!!!!!!!!X: "+x);
+//            System.out.println("!!!!!!!!!!!Y: "+y);
+
+            while(posX <= x2)
             {
-                pos = x1 + m*t;
+                posX = x1 + m*t;
+                posY = y1 + t;
                 t++;
-                System.out.println("recta: " + pos);
-                if(pos == x)    //contains
+//                System.out.println("rectaX: " + posX);
+//                System.out.println("rectaY: " + posY);
+                if(containsLine(posX, x, posY, y))    //contains
                     return true;
                 
             }
@@ -486,5 +493,14 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         return false;
     }
     
+    public boolean containsLine(int x, int x0, int y, int y0)
+    {
+//        double x0 = x;
+//        double y0 = y;
+        return (x >= x0 &&
+                y >= y0 &&
+                x < x0 + DEFAULT_SIZE &&
+                y < y0 + DEFAULT_SIZE);
+    }
 }
 
