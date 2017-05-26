@@ -64,6 +64,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private final State selected[] = new State[3];
     private State select = new State(null, null);
     private ArrayList<Integer> states;
+    
+    private boolean right = false;
+    private boolean left = false;
 
     
     public JDrawPanel()
@@ -452,6 +455,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         int y1;
         int y2;
         int m;
+        int mY = 1;
         int posX;
         int posY;
         int t;
@@ -466,29 +470,49 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("x1: " + x1);
             System.out.println("y1: " + y1);
             System.out.println("x2: " + x2);
-//            System.out.println("y2: " + y2);
+            System.out.println("y2: " + y2);
             
-            m =  (x2-(x1))/(y1-(y2));
+            m =  (x2-(x1))/(y2-(y1));
+            System.out.println("!!!!!!!m: "+ m);
+            //m<0 && y2 < y1
+            if(m<0 && y2 < y1)
+            {
+                m = -m;
+                mY = -1;
+            }
+            else
+                mY = 1;
+            if(x2 < x1 && y2 < y1)
+            {
+                m = -m;
+                mY = -1;
+            }
+            
+            m = sloapRight(m, x1, x2);
             System.out.println("M: " + m);
+            System.out.println("MY: " + mY);
             
             t = 1;
             posX = x1 + m*t;
-//          posY = y1 + m*t;
             
-//            System.out.println("!!!!!!!!!!!X: "+x);
-//            System.out.println("!!!!!!!!!!!Y: "+y);
-
-            while(posX <= x2)
+            System.out.println("!!!!!!!!!!!X: "+x);
+            System.out.println("!!!!!!!!!!!Y: "+y);
+            
+            //posX <= x2
+            System.out.println("RRRRRRRRRR: " + this.right);
+            System.out.println("LLLLLLLLLL: " + this.left);
+            System.out.println("EndLine: " + endLine(posX, x2));
+            while(endLine(posX, x2))   //hasta que termine la linea respectivamente
             {
                 posX = x1 + m*t;
-                posY = y1 + t;
+                posY = y1 + mY*t;
                 t++;
 //                System.out.println("rectaX: " + posX);
 //                System.out.println("rectaY: " + posY);
                 if(containsLine(posX, x, posY, y))    //contains
                     return true;
-                
             }
+            resetBoolsLine();
         }
         return false;
     }
@@ -501,6 +525,33 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 y >= y0 &&
                 x < x0 + DEFAULT_SIZE &&
                 y < y0 + DEFAULT_SIZE);
+    }
+
+    private int sloapRight(int m, int x1, int x2) {
+        if(x2 > x1)
+        {
+            this.right = true;
+            return Math.abs(m);
+        }
+        this.left = true;
+        return m;
+    }
+
+    private boolean endLine(int posX, int x2) {
+        if(this.right)
+        {
+            return (posX <= x2);
+        }
+        else if(this.left)
+        {
+            return (posX >= x2);
+        }
+        return false;
+    }
+
+    private void resetBoolsLine() {
+        this.right = false;
+        this.left = false;
     }
 }
 
