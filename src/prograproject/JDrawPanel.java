@@ -65,6 +65,10 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private State select = new State(null, null);
     private ArrayList<Integer> states;
 
+    private boolean right = false;
+    private boolean left = false;
+    private boolean up = false;
+    private boolean down = false;
     
     private String labelDiag;
     
@@ -363,11 +367,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("choca");
             return true;
         }
-//        if(isLine(e.getX(), e.getY()))
-//        {
-//            System.out.println("hay linea!");
-//            return true;
-//        }
+        if(isLine(e.getX(), e.getY()))
+        {
+            System.out.println("hay linea!");
+            return true;
+        }
         System.out.println("false!!!!!!!!!!!!!!!!!!!!");
         return false;
     }
@@ -423,13 +427,14 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 
     private boolean isLine(int x, int y)
     {
-        int x1;
-        int x2;
-        int y1;
-        int y2;
-        int m;
-        int posX;
-        int posY;
+        double x1;
+        double x2;
+        double y1; 
+        double y2;
+        double m;
+        double mY = 1;
+        double posX;
+        double posY;
         int t;
         
         for (int i = 0; i < transitionPoints.size(); i++)
@@ -442,36 +447,62 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("x1: " + x1);
             System.out.println("y1: " + y1);
             System.out.println("x2: " + x2);
-//            System.out.println("y2: " + y2);
+            System.out.println("y2: " + y2);
             
-            m =  (x2-(x1))/(y1-(y2));
+            m =  (x2-(x1))/(y2-(y1));
+            System.out.println("!!!!!!!m: "+ m);
+            //m<0 && y2 < y1
+            if(m<0 && y2 < y1)
+            {
+                m = -m;
+                mY = -1;
+            }
+            else
+                mY = 1;
+            if(x2 < x1 && y2 < y1)
+            {
+                m = -m;
+                mY = -1;
+            }
+            
+            if(m == 0 && y2 < y1)
+            {
+                mY = -1;
+            }
+            
+            m = sloapRight(m, x1, x2, y1, y2);
             System.out.println("M: " + m);
+            System.out.println("MY: " + mY);
             
             t = 1;
             posX = x1 + m*t;
-//          posY = y1 + m*t;
+            posY = y1 + mY*t;
             
-//            System.out.println("!!!!!!!!!!!X: "+x);
-//            System.out.println("!!!!!!!!!!!Y: "+y);
-
-            while(posX <= x2)
+            System.out.println("!!!!!!!!!!!X: "+x);
+            System.out.println("!!!!!!!!!!!Y: "+y);
+            
+            //posX <= x2
+            System.out.println("RRRRRRRRRR: " + this.right);
+            System.out.println("LLLLLLLLLL: " + this.left);
+            System.out.println("UUUUUUU: " + this.up);
+            System.out.println("DDDDDDD: " + this.down);
+            System.out.println("EndLine: " + endLine(posX, x2, m, posY, y2));
+            while(endLine(posX, x2, m, posY, y2))   //hasta que termine la linea respectivamente
             {
                 posX = x1 + m*t;
-                posY = y1 + t;
+                posY = y1 + mY*t;
                 t++;
 //                System.out.println("rectaX: " + posX);
 //                System.out.println("rectaY: " + posY);
                 if(containsLine(posX, x, posY, y))    //contains
                     return true;
-                
             }
+            resetBoolsLine();
         }
         return false;
     }
     
-
-    
-    public boolean containsLine(int x, int x0, int y, int y0)
+    public boolean containsLine(double x, double x0, double y, double y0)
     {
 //        double x0 = x;
 //        double y0 = y;
@@ -480,7 +511,61 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 x < x0 + DEFAULT_SIZE &&
                 y < y0 + DEFAULT_SIZE);
     }
-    
+
+    private double sloapRight(double m, double x1, double x2, double y1, double y2) {
+        if(m != 0)
+        {
+            if(x2 > x1)
+            {
+                this.right = true;
+                return Math.abs(m);
+            }
+            this.left = true;
+        }
+        else
+        {
+            if(y2 > y1)
+            {
+                this.down = true;
+                return m;
+            }
+            this.up = true;
+        }
+        return m;
+    }
+
+    private boolean endLine(double posX, double x2, double m, double posY, double y2) {
+        if(m != 0)
+        {
+            if(this.right)
+            {
+                return (posX <= x2);
+            }
+            else if(this.left)
+            {
+                return (posX >= x2);
+            }
+        }
+        else
+        {
+            if(this.down)
+            {
+                return (posY <= y2);
+            }
+            else if(this.up)
+            {
+                return (posY >= y2);
+            }
+        }
+        return false;
+    }
+
+    private void resetBoolsLine() {
+        this.right = false;
+        this.left = false;
+        this.up = false;
+        this.down = false;
+    }
     
     
     
