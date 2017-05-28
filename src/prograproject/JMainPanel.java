@@ -28,6 +28,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
@@ -69,6 +70,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private static final int DEFAULT_SIZE = 50;
     
     private JDrawPanel panelLv1;
+    public Dialog labelDiag;
     
     public JMainPanel()
     {
@@ -197,48 +199,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         frame.setResizable(false);
         frame.setSize(new Dimension(900, 700));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        
         return frame;
-         
      }
-              
 
-    @Override
-    public void mouseMoved(MouseEvent e)
-    {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e)
-    {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e)
-    {
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e)
-    {
-    }
-    @Override
-    public void mouseReleased(MouseEvent e)
-    {
-        
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e)
-    {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e)
-    {
-    }
      public  void actionPerformed(ActionEvent e)
     {
         if(e.getSource()==startNode)
@@ -266,6 +229,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         if(e.getSource() == this.transition)
         {
             this.panelLv1.resetBools();
+            String name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
+            this.panelLv1.setLabelDiag(name);
             this.panelLv1.setIsTransition(true);
         }
         
@@ -277,7 +242,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             this.dialog.setVisible(true);
         }
     }
-     
+          
     public JDrawPanel panelMaker()
      {
         JDrawPanel panel = new JDrawPanel();
@@ -288,6 +253,41 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     
       @Override
     public void paint(Graphics g)
+    {
+    }
+    
+    @Override
+    public void mouseMoved(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e)
+    {
+    }
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e)
     {
     }
 

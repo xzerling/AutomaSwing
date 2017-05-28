@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -40,7 +41,11 @@ public class JMainWindow extends JFrame implements ActionListener
 //        this.gamePanel = new JDevilCrushPanel();
         this.mainPanel = new JMainPanel();
         
-                this.getContentPane().add(mainPanel);
+       /*
+        NICO AQUI ESTA EL DIALOGO PARA AGARRAR LOS STRINGS POR COMA
+        */
+        String name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
+        this.getContentPane().add(mainPanel);
         
 //        this.add(button = new JButton("OESTE"), BorderLayou.EAST);
 //        this.add(button = new JButton("OESTE"), BorderLayout.WEST);

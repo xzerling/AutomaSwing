@@ -66,6 +66,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private ArrayList<Integer> states;
 
     
+    private String labelDiag;
+    
     public JDrawPanel()
     {
         this.setBackground(Color.WHITE);
@@ -80,6 +82,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.endPoints = new ArrayList<>();
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
+        
         
         try{
             img = ImageIO.read(new File("src/prograproject/dc6.png"));            
@@ -131,7 +134,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 if(this.transitionPoints.get(k)[1] != null)
                 {
                     System.out.println("p1: "+this.transitionPoints.get(k)[0].getPoint() +"p2: " +this.transitionPoints.get(k)[1].getPoint());
-                    this.drawLine(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], this.transitionPoints.get(k)[2], g2);
+                    this.drawTrans(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], this.transitionPoints.get(k)[2], g2);
                     this.repaintNodes(g);
                     System.out.println("dibujó");   
                 }
@@ -141,10 +144,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     }
 
 
-    @Override
-    public void mouseMoved(MouseEvent e)
-    {
-    }
+
 
     @Override
     public void mouseClicked(MouseEvent e)
@@ -189,7 +189,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 State p2 = selected[1];
                 //etiqueta como parametro de state, point queda null
                 //
-                State p3 = new State(null, "a");
+                System.out.println("etiqueta a guardar: "+this.labelDiag);
+                State p3 = new State(null, this.labelDiag);
                 this.selected[2] = p3;
                 
                 System.out.println(selected[0].getPoint()+"");
@@ -214,8 +215,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             }
             System.out.println("FUERA CLICK");
 //                    this.printTrans();
-
-
         }
         repaint();
         
@@ -225,34 +224,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     public void mousePressed(MouseEvent e)
     {
         select = this.getElementAt(e.getX(), e.getY());
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e)
-    {
-        System.out.println("Dragged");
-    }
-
-    
-    @Override
-    public void mouseReleased(MouseEvent e)
-    {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e)
-    {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e)
-    {
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
     }
 
     public boolean isIsStartNode() {
@@ -293,10 +264,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     {
         State finalPoint;
         
-        for (int k = 0; k < startPoints.size(); k++) {
+        for (int k = 0; k < startPoints.size(); k++) 
+        {
             finalPoint = contains(startPoints.get(k), x, y);
             if(finalPoint != null)
-                return finalPoint;
+            return finalPoint;
         }
         
         for (int k = 0; k < standPoints.size(); k++) {
@@ -333,13 +305,16 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     }
     
     
-    public void drawLine(State from, State to, State label, Graphics2D g)
+    public void drawTrans(State from, State to, State label, Graphics2D g)
     {
-        int lambda = 10;
+        
+//        int lambda = 10;
+//        label.setState(this.transDialogMaker());
         g.drawLine(from.getPoint().x+DEFAULT_LINE_SIZE, from.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().x+DEFAULT_LINE_SIZE, to.getPoint().y+DEFAULT_LINE_SIZE);
         g.drawString(label.getState(), (from.getPoint().x+to.getPoint().x+2*DEFAULT_LINE_SIZE-30)/2, (from.getPoint().y+to.getPoint().y+2*DEFAULT_LINE_SIZE)/2);
-        Polygon poly = new Polygon(new int[] {to.getPoint().x, to.getPoint().x-lambda, to.getPoint().x-lambda}, new int[] {to.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().y+lambda+10, to.getPoint().y+DEFAULT_SIZE-20}, 3);
+//        Polygon poly = new Polygon(new int[] {to.getPoint().x, to.getPoint().x-lambda, to.getPoint().x-lambda}, new int[] {to.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().y+lambda+10, to.getPoint().y+DEFAULT_SIZE-20}, 3);
 //        g.drawPolygon(poly);
+        
 
     }
     
@@ -348,6 +323,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     {
         this.selected[0] = null;
         this.selected[1] = null;
+        this.selected[2] = null;
     }
     
     public void printTrans()
@@ -387,11 +363,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("choca");
             return true;
         }
-        if(isLine(e.getX(), e.getY()))
-        {
-            System.out.println("hay linea!");
-            return true;
-        }
+//        if(isLine(e.getX(), e.getY()))
+//        {
+//            System.out.println("hay linea!");
+//            return true;
+//        }
         System.out.println("false!!!!!!!!!!!!!!!!!!!!");
         return false;
     }
@@ -493,6 +469,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         return false;
     }
     
+
+    
     public boolean containsLine(int x, int x0, int y, int y0)
     {
 //        double x0 = x;
@@ -501,6 +479,47 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 y >= y0 &&
                 x < x0 + DEFAULT_SIZE &&
                 y < y0 + DEFAULT_SIZE);
+    }
+    
+    
+    
+    
+    
+    //*****************************Metodos sin usos***************************
+    @Override
+    public void mouseMoved(MouseEvent e)
+    {
+    }
+    
+    @Override
+    public void mouseDragged(MouseEvent e)
+    {
+    }
+
+    
+    @Override
+    public void mouseReleased(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e)
+    {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e)
+    {
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+    }
+
+    void setLabelDiag(String transLabel) 
+    {
+        this.labelDiag = transLabel;
     }
 }
 

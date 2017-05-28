@@ -88,8 +88,41 @@ public class Dialog extends JDialog implements ActionListener
         this.instructions.setText(s);
     }
 
+    public String getInputText()
+    {
+        return this.input.getText();
+    }
+    public JTextField getInput()
+    {
+        return input;
+    }
+
+    public void setInput(JTextField input) 
+    {
+        this.input = input;
+    }
+    
+    public void returnInput(JMainPanel mp)
+    {
+        System.out.println("returninput");
+        mp.labelDiag.setInput(input);
+    }
+    
     @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void actionPerformed(ActionEvent e) 
+    {
+        String comm = e.getActionCommand();
+        if(comm.equals("Aceptar") )
+        {
+//            this.input.setText(comm);
+            this.dispose();
+
+            System.out.println("actionperformDialog");
+            System.out.println(this.input.getText());
+            this.setVisible(false);
+            
+//            saveDrawPanel()
+
+        }
     }
 }
