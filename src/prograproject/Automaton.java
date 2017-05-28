@@ -30,8 +30,8 @@ public class Automaton
     {
         String initial = initialState;
         char[] array = input.toCharArray();
-        boolean finState = finalStates.contains(initial);
-
+        int length = array.length;
+        
         for (int i = 0; i < array.length; i++) 
         {
             char sym = array[i];
@@ -41,12 +41,13 @@ public class Automaton
                 if(transitions.get(j).getStart().equals(initial) && transitions.get(j).getSymbol() == sym)
                 {
                     initial = transitions.get(j).getEnd();
-                    finState = finalStates.contains(initial);
+                    length--;
+                    j = transitions.size()+1;
                 }
             }
-        }
-        
-        return finState;
+        }       
+        if(length > 0){return false;}
+        else{return true;}
     }
     
     public Automaton convertToDFA(String ini, ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fin, ArrayList<Character> alph, String in)
