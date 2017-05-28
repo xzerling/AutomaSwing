@@ -14,6 +14,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -32,6 +33,7 @@ import javafx.scene.shape.Line;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -62,8 +64,10 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     
     //[0]in, [1] out, [2] label
     private final State selected[] = new State[3];
+    private State onMainSelected[] = new State[3];
     private State select = new State(null, null);
     private ArrayList<Integer> states;
+    private ArrayList<Transition> trans;
 
     private boolean right = false;
     private boolean left = false;
@@ -86,6 +90,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.endPoints = new ArrayList<>();
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
+        this.trans = new ArrayList<>();
         
         
         try{
@@ -170,7 +175,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             endPoints.add(new State(e.getPoint(), labelMaker(states)));
             setIsEndNode(false);
         }
-        else if(this.isTransition)
+         else if(this.isTransition)
         {
             System.out.println(this.getElementAt(e.getPoint().x, e.getPoint().y)); 
             System.out.println("antesIF");
@@ -206,11 +211,15 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 localSelected[1] = p2;
                 localSelected[2] = p3;
                 
+                this.onMainSelected = localSelected;
+                
+                
                 
                 
                 this.transitionPoints.add(localSelected);
                 this.setIsTransition(false);
                 this.printTrans();
+                this.writeTrans();
 
                 this.flushTrans();
 //                System.out.println("FLUSH!");
@@ -606,5 +615,31 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     {
         this.labelDiag = transLabel;
     }
+    
+        public String writeTrans()
+    {
+        String transitions = new String();
+        System.out.println("TRANS EN EL PANEL!!!!");
+
+        for (int k = 0; k < this.transitionPoints.size(); k++)
+            {
+                transitions = ("f( "+this.transitionPoints.get(k)[0].getState() +" ,  " + this.transitionPoints.get(k)[2].getState()+ " ) = "+this.transitionPoints.get(k)[1].getState())+"\n";
+                Transition t = new Transition(this.transitionPoints.get(k)[0].getState(), this.transitionPoints.get(k)[1].getState(), this.transitionPoints.get(k)[2].getState().charAt(0));
+                this.trans.add(t);
+                System.out.println(transitions);
+            }
+        return transitions;
+    }
+        
+    public JPanel buildTransPanel()
+    {
+        JPanel drawTransitionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+//        JLabel trans = new JLabel(this.writeTrans());
+        JTextArea ta = new JTextArea();
+        ta.append(this.writeTrans());
+        drawTransitionPanel.add(ta);
+        return drawTransitionPanel;
+    }
+
 }
 

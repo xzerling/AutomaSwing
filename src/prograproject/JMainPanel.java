@@ -63,7 +63,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private ImageIcon  imgbutton3;
     private ImageIcon  imgbutton4;
     
-    private JLabel labelMatrix;
     
     private static final int WIDTH = 600;
     private static final int HEIGHT =600;
@@ -71,6 +70,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     
     private JDrawPanel panelLv1;
     public Dialog labelDiag;
+    
+    private State labelCoected[] = new State[3];
+
     
     public JMainPanel()
     {
@@ -102,6 +104,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.imgbutton4 = new ImageIcon(newimg4);
         
 
+        
         
         this.panelLv1 = this.panelMaker();
         frameLv1 = frameMaker(panelLv1);
@@ -139,10 +142,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         rightPanel.add(auxTitle,BorderLayout.NORTH);
         
         
-        JPanel mainTransitionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        this.labelMatrix = new JLabel("q0 , a , q1");
+        JPanel mainTransitionPanel = this.panelLv1.buildTransPanel();
         
-        mainTransitionPanel.add(this.labelMatrix);
         
         rightPanel.add(mainTransitionPanel, BorderLayout.CENTER);
         this.sigma = new JTextField();
@@ -231,6 +232,13 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             this.panelLv1.resetBools();
             String name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
             this.panelLv1.setLabelDiag(name);
+//            System.out.println("despues del dialog");
+//            this.labelCoected[0] = this.panelLv1.getState0();
+//            this.labelCoected[1] = this.panelLv1.getState1();
+//            this.labelCoected[2] = this.panelLv1.getState2();
+            
+//            this.printMainLabel();
+            
             this.panelLv1.setIsTransition(true);
         }
         
@@ -250,6 +258,15 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         return panel;
          
      }
+    
+    
+    
+    public void printMainLabel()
+    {
+        System.out.println(this.labelCoected[0].getState());
+        System.out.println(this.labelCoected[1].getState());
+        System.out.println(this.labelCoected[2].getState());
+    }
     
       @Override
     public void paint(Graphics g)
