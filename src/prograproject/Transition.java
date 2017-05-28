@@ -30,4 +30,9 @@ public class Transition {
     {
         return symbol;
     }
+    
+    public String repTransition()
+    {
+        return ("f( " + this.symbol + " , " + this.symbol + " ) = " + this.end);
+    }
 }
