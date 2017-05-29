@@ -74,6 +74,11 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean up = false;
     private boolean down = false;
     
+    private boolean right2 = false;
+    private boolean left2 = false;
+    private boolean up2 = false;
+    private boolean down2 = false;
+    
     private String labelDiag;
     private JTextArea textArea = new JTextArea();
     public String transAsString;
@@ -250,10 +255,12 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 
                 this.onMainSelected = localSelected;
                 
+                //condicion si choca la flecha con algun elemento
+                /*if(this.transitionPoints.size() >= 1)
+                overlapTransition(localSelected);*/
                 
+                    this.transitionPoints.add(localSelected);
                 
-                
-                this.transitionPoints.add(localSelected);
                 this.setIsTransition(false);
                 this.printTrans();
                 this.writeTrans();
@@ -530,7 +537,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("!!!!!!!!!!!X: "+x);
             System.out.println("!!!!!!!!!!!Y: "+y);
             
-            //posX <= x2
             System.out.println("RRRRRRRRRR: " + this.right);
             System.out.println("LLLLLLLLLL: " + this.left);
             System.out.println("UUUUUUU: " + this.up);
@@ -582,6 +588,27 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         }
         return m;
     }
+    private double sloapRight2(double m, double x1, double x2, double y1, double y2) {
+        if(m != 0)
+        {
+            if(x2 > x1)
+            {
+                this.right2 = true;
+                return Math.abs(m);
+            }
+            this.left2 = true;
+        }
+        else
+        {
+            if(y2 > y1)
+            {
+                this.down2 = true;
+                return m;
+            }
+            this.up2 = true;
+        }
+        return m;
+    }
 
     private boolean endLine(double posX, double x2, double m, double posY, double y2) {
         if(m != 0)
@@ -608,12 +635,45 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         }
         return false;
     }
+    
+    private boolean endLine2(double posX, double x2, double m, double posY, double y2) {
+        if(m != 0)
+        {
+            if(this.right2)
+            {
+                return (posX <= x2);
+            }
+            else if(this.left2)
+            {
+                return (posX >= x2);
+            }
+        }
+        else
+        {
+            if(this.down2)
+            {
+                return (posY <= y2);
+            }
+            else if(this.up2)
+            {
+                return (posY >= y2);
+            }
+        }
+        return false;
+    }
 
     private void resetBoolsLine() {
         this.right = false;
         this.left = false;
         this.up = false;
         this.down = false;
+    }
+
+    private void resetBoolsLine2() {
+        this.right2 = false;
+        this.left2 = false;
+        this.up2 = false;
+        this.down2 = false;
     }
     
     
@@ -700,6 +760,156 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             System.out.println("en arraylist"+trans.get(i).repTransition());
             
         }
+    }
+
+    public void overlapTransition(State[] localSelected) {
+        Point start = localSelected[0].getPoint();
+        Point end  = localSelected[1].getPoint();
+//        boolean line = false;
+        
+        
+        double x1;
+        double x2;
+        double y1;
+        double y2;
+        double m;
+        double mY = 1;
+        double posX;
+        double posY;
+        int t;
+        
+        double xStart;
+        double xEnd;
+        double yStart;
+        double yEnd;
+        double m2;
+        double m2Y = 1;
+        double pos2X;
+        double pos2Y;
+        int t2;
+        
+            xStart= start.x + DEFAULT_LINE_SIZE;
+            yStart = start.y + DEFAULT_LINE_SIZE;
+            xEnd = end.x + DEFAULT_LINE_SIZE;
+            yEnd = end.y + DEFAULT_LINE_SIZE;
+            
+            System.out.println("xStart: " + xStart);
+            System.out.println("yStart: " + yStart);
+            System.out.println("xEnd: " + xEnd);
+            System.out.println("yEnd: " + yEnd);
+            
+            m2 =  (xEnd-(xStart))/(yEnd-(yStart));
+            System.out.println("!!!!!!!m2: "+ m2);
+            if(m2<0 && yEnd < yStart)
+            {
+                m2 = -m2;
+                m2Y = -1;
+            }
+            else
+                m2Y = 1;
+            if(xEnd < xStart && yEnd < yStart)
+            {
+                m2 = -m2;
+                m2Y = -1;
+            }
+            
+            if(m2 == 0 && yEnd < yStart)
+            {
+                m2Y = -1;
+            }
+            
+            m2 = sloapRight2(m2, xStart, xEnd, yStart, yEnd);
+            System.out.println("M2: " + m2);
+            System.out.println("M2Y: " + m2Y);
+            
+            t2 = 1;
+            pos2X = xStart + m2*t2;
+            pos2Y = yStart + mY*t2;
+            
+            System.out.println("R222222: " + this.right2);
+            System.out.println("LL22222: " + this.left2);
+            System.out.println("UUU2: " + this.up2);
+            System.out.println("DDD2: " + this.down2);
+            System.out.println("EndLine2: " + endLine2(pos2X, xEnd, yEnd, pos2Y, yEnd));
+            while(endLine2(pos2X, xEnd, yEnd, pos2Y, yEnd))   //hasta que termine la linea respectivamente
+            {
+                pos2X = xStart + m2*t2;
+                pos2Y = yStart + m2Y*t2;
+                
+                System.out.println("POS2X!!!!!!!!!!!!!!!!!!!!!!!!!!: " + pos2X);
+                System.out.println("POS2Y!!!!!!!!!!!!!!!!!!!!!!!!!!: " + pos2Y);
+                
+//                System.out.println("rectaX: " + pos2X);
+//                System.out.println("rectaY: " + pos2Y);
+
+                for (int i = 0; i < transitionPoints.size(); i++)
+                {
+                    x1 = transitionPoints.get(i)[0].getPoint().x + DEFAULT_LINE_SIZE;
+                    y1 = transitionPoints.get(i)[0].getPoint().y + DEFAULT_LINE_SIZE;
+                    x2 = transitionPoints.get(i)[1].getPoint().x + DEFAULT_LINE_SIZE;
+                    y2 = transitionPoints.get(i)[1].getPoint().y + DEFAULT_LINE_SIZE;
+
+                    System.out.println("x1: " + x1);
+                    System.out.println("y1: " + y1);
+                    System.out.println("x2: " + x2);
+                    System.out.println("y2: " + y2);
+
+                    m =  (x2-(x1))/(y2-(y1));
+                    System.out.println("!!!!!!!m: "+ m);
+                    //m<0 && y2 < y1
+                    if(m<0 && y2 < y1)
+                    {
+                        m = -m;
+                        mY = -1;
+                    }
+                    else
+                        mY = 1;
+                    if(x2 < x1 && y2 < y1)
+                    {
+                        m = -m;
+                        mY = -1;
+                    }
+
+                    if(m == 0 && y2 < y1)
+                    {
+                        mY = -1;
+                    }
+
+                    m = sloapRight(m, x1, x2, y1, y2);
+                    System.out.println("M: " + m);
+                    System.out.println("MY: " + mY);
+
+                    t = 1;
+                    posX = x1 + m*t;
+                    posY = y1 + mY*t;
+
+                    System.out.println("RRRRRRRRRR: " + this.right);
+                    System.out.println("LLLLLLLLLL: " + this.left);
+                    System.out.println("UUUUUUU: " + this.up);
+                    System.out.println("DDDDDDD: " + this.down);
+                    System.out.println("EndLine: " + endLine(posX, x2, m, posY, y2));
+                    while(endLine(posX, x2, m, posY, y2))   //hasta que termine la linea respectivamente
+                    {
+                        posX = x1 + m*t;
+                        posY = y1 + mY*t;
+                        if(posX == pos2X && posY == pos2Y )
+                            System.out.println("IGUALES!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        t++;
+                        System.out.println("rectaX: " + posX);
+                        System.out.println("rectaY: " + posY);
+                        System.out.println("recta2X: " + pos2X);
+                        System.out.println("recta2Y: " + pos2Y);
+                        System.out.println("");
+
+                    }
+                    resetBoolsLine();
+                }
+            t2++;
+            }
+        resetBoolsLine2();
+        
+//        this.transitionPoints.add(localSelected);
+        
     }
 
 }
