@@ -108,8 +108,40 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             }
         
     }
+    public ArrayList<Transition> getTransitions()
+    {
+        return this.trans;
+    }
     
+    public ArrayList<String> getAutomatonStates()
+    {
+        ArrayList<String> states = new ArrayList<>();
+        for (int i = 0; i < startPoints.size() ; i++) {
+            states.add(startPoints.get(i).getState());
+        }
+        for (int i = 0; i < standPoints.size(); i++) {
+            states.add(standPoints.get(i).getState());
+        }
+        for (int i = 0; i < endPoints.size(); i++) {
+            states.add(endPoints.get(i).getState());
+        }
+        return states;
+    }
     
+    public ArrayList<String> getFinalStates()
+    {
+        ArrayList<String> finalStates = new ArrayList<>();
+        for (int i = 0; i < endPoints.size(); i++) {
+            finalStates.add(endPoints.get(i).getState());
+        }
+        return finalStates;
+    }
+    
+    public String getStart()
+    {
+        String ini = startPoints.get(0).getState();
+        return ini;
+    }
     //pinta los nodos y las lineas de trans
     @Override
     public void paint(Graphics g)
