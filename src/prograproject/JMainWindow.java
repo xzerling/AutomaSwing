@@ -2,6 +2,7 @@ package prograproject;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -30,6 +31,7 @@ public class JMainWindow extends JFrame implements ActionListener
     private JMenu menu2;
     private JMenuItem mi1;
     private JMenuItem mi2;
+    private String name;
     
     public JMainWindow()
     {
@@ -44,7 +46,6 @@ public class JMainWindow extends JFrame implements ActionListener
        /*
         NICO AQUI ESTA EL DIALOGO PARA AGARRAR LOS STRINGS POR COMA
         */
-        String name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
         this.getContentPane().add(mainPanel);
         
 //        this.add(button = new JButton("OESTE"), BorderLayou.EAST);
@@ -56,7 +57,7 @@ public class JMainWindow extends JFrame implements ActionListener
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         super.pack();
     }
-    
+        
     @Override
     public void actionPerformed(ActionEvent e)
     {

@@ -19,6 +19,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -76,16 +77,25 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     JTextArea ta = new JTextArea();
 
     private State labelCoected[] = new State[3];
-
+    private String name;
+    private ArrayList<Character> characters;
     
     public JMainPanel()
     {
+        this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
+        this.characters = new ArrayList<>();
+        
+        String[] array = this.name.split(",");
+        for (int i = 0; i < array.length; i++) {
+            this.characters.add(array[i].charAt(0));
+        }
         
         this.setLayout(new BorderLayout());
         Dimension dimension = new Dimension(JMainPanel.WIDTH, JMainPanel.HEIGHT);
         this.setPreferredSize(dimension);
         super.addMouseListener(this);
         super.addMouseMotionListener(this);
+        
         
         ImageIcon icon = new ImageIcon("src/prograproject/dc6.png");
         Image img = icon.getImage() ;  
@@ -259,10 +269,27 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource()==verWord)
         {
-            this.dialog = new Dialog();
-            this.dialog.setTextLabel("Palabra :");
-            this.dialog.setInstructions("Ingrese palabra a verificar");
-            this.dialog.setVisible(true);
+            String input = JOptionPane.showInputDialog(this, "Ingrese palabra a verificar", "Palabra", JOptionPane.INFORMATION_MESSAGE);
+            String in = this.panelLv1.getStart();
+            ArrayList<String> states = this.panelLv1.getAutomatonStates();
+            ArrayList<Transition> trans = this.panelLv1.getTransitions();
+            ArrayList<String> endStates = this.panelLv1.getFinalStates();
+            
+            Automaton NDFA = new Automaton(in, states, trans, states, characters, input);
+            
+            Automaton DFA = NDFA.convertToDFA(in, states, trans, states, characters, input);
+            
+            boolean verify = DFA.verify();
+            
+            if(verify)
+            {
+                JOptionPane.showMessageDialog(this, "¡Palabra Aceptada!");
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(this ,"¡Palabra Rechazada! :-(",
+                "Verificar Palabra", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
           
