@@ -75,6 +75,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean down = false;
     
     private String labelDiag;
+    private JTextArea textArea = new JTextArea();
+    public String transAsString;
+
     
     public JDrawPanel()
     {
@@ -91,6 +94,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
         this.trans = new ArrayList<>();
+        
+        
         
         
         try{
@@ -415,6 +420,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 g.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 3);
             }
         }
+        
+        
+//       this.buildTransPanel();
     }
     
     public String labelMaker(ArrayList<Integer> states)
@@ -623,22 +631,43 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 
         for (int k = 0; k < this.transitionPoints.size(); k++)
             {
-                transitions = ("f( "+this.transitionPoints.get(k)[0].getState() +" ,  " + this.transitionPoints.get(k)[2].getState()+ " ) = "+this.transitionPoints.get(k)[1].getState())+"\n";
+                this.transAsString = ("f( "+this.transitionPoints.get(k)[0].getState() +" ,  " + this.transitionPoints.get(k)[2].getState()+ " ) = "+this.transitionPoints.get(k)[1].getState()+"\n");
                 Transition t = new Transition(this.transitionPoints.get(k)[0].getState(), this.transitionPoints.get(k)[1].getState(), this.transitionPoints.get(k)[2].getState().charAt(0));
                 this.trans.add(t);
                 System.out.println(transitions);
+
             }
+            System.out.println("en clase transition");
+            this.printTransOnArraylist();
+            System.out.println("en clase transition");
+
         return transitions;
     }
+    
         
-    public JPanel buildTransPanel()
+    public JTextArea getTarnsitionTextArea()
+    {
+        return this.textArea;
+    }
+    
+    public void buildTransPanel()
     {
         JPanel drawTransitionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 //        JLabel trans = new JLabel(this.writeTrans());
         JTextArea ta = new JTextArea();
-        ta.append(this.writeTrans());
-        drawTransitionPanel.add(ta);
-        return drawTransitionPanel;
+        this.textArea.append(this.writeTrans());
+        System.out.println("(en drawpanel)rellena con: "+this.textArea.getText());
+        drawTransitionPanel.add(this.textArea);
+    }
+    
+    public void printTransOnArraylist()
+    {
+        System.out.println("string de funciones: \n"+this.transAsString);
+        for (int i = 0; i < this.trans.size(); i++)
+        {
+            System.out.println("en arraylist"+trans.get(i).repTransition());
+            
+        }
     }
 
 }

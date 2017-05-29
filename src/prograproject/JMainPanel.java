@@ -30,6 +30,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
@@ -70,7 +71,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     
     private JDrawPanel panelLv1;
     public Dialog labelDiag;
-    
+    private JPanel rightPanel;
+    private String trans;
+    JTextArea ta = new JTextArea();
+
     private State labelCoected[] = new State[3];
 
     
@@ -134,18 +138,17 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         JPanel southPanel = new JPanel();
         southPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
         
-        JPanel rightPanel = new JPanel();
+        this.rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
         rightPanel.setSize(JPanel.HEIGHT, 200);
         JPanel auxTitle = new JPanel(new FlowLayout(FlowLayout.LEFT));
         auxTitle.add(new JLabel("Transiciones"));
+        
         rightPanel.add(auxTitle,BorderLayout.NORTH);
+//        JPanel mainTransitionPanel = this.panelLv1.buildTransPanel();
+        rightPanel.add(ta, BorderLayout.CENTER);
         
         
-        JPanel mainTransitionPanel = this.panelLv1.buildTransPanel();
-        
-        
-        rightPanel.add(mainTransitionPanel, BorderLayout.CENTER);
         this.sigma = new JTextField();
         this.sigma.setEnabled(false);
         
@@ -205,6 +208,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 
      public  void actionPerformed(ActionEvent e)
     {
+        this.refreshMatrix();
+        this.trans = this.trans+this.panelLv1.transAsString;
+        System.out.println("trans: "+trans);
         if(e.getSource()==startNode)
         {
             this.panelLv1.setIsStartNode(true);
@@ -213,18 +219,24 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             transNode.setEnabled(true);
             endNode.setEnabled(true);
             transition.setEnabled(true);
+                    this.refreshMatrix();
+
         }
         
         if(e.getSource()==transNode)
         {
             this.panelLv1.resetBools();
             this.panelLv1.setIsStandNode(true);
+                    this.refreshMatrix();
+
         }
         
         if(e.getSource()==endNode)
         {
             this.panelLv1.resetBools();
             this.panelLv1.setIsEndNode(true);
+                    this.refreshMatrix();
+
         }
         
         if(e.getSource() == this.transition)
@@ -240,7 +252,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 //            this.printMainLabel();
             
             this.panelLv1.setIsTransition(true);
+                    this.refreshMatrix();
+
         }
+       
         
         if(e.getSource()==verWord)
         {
@@ -306,6 +321,23 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     @Override
     public void mouseExited(MouseEvent e)
     {
+    }
+
+    private void setRightPanel(JTextArea ta)
+    {
+//        System.out.println("remueve");
+//        this.rightPanel.removeAll();
+        System.out.println("rellena con lo de abajo: ");
+        this.trans = this.panelLv1.transAsString;
+        System.out.println(trans);
+        System.out.println(ta.getText());
+        this.ta.append(trans);
+//        this.rightPanel.add(ta);
+    }
+    
+    private void refreshMatrix()
+    {
+        this.setRightPanel(this.panelLv1.getTarnsitionTextArea());
     }
 
 }
