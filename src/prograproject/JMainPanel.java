@@ -218,7 +218,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 
      public  void actionPerformed(ActionEvent e)
     {
-        this.refreshMatrix();
         this.trans = this.trans+this.panelLv1.transAsString;
         System.out.println("trans: "+trans);
         if(e.getSource()==startNode)
@@ -229,28 +228,24 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             transNode.setEnabled(true);
             endNode.setEnabled(true);
             transition.setEnabled(true);
-                    this.refreshMatrix();
-
         }
         
         if(e.getSource()==transNode)
         {
             this.panelLv1.resetBools();
             this.panelLv1.setIsStandNode(true);
-                    this.refreshMatrix();
-
         }
         
         if(e.getSource()==endNode)
         {
             this.panelLv1.resetBools();
             this.panelLv1.setIsEndNode(true);
-                    this.refreshMatrix();
-
         }
         
         if(e.getSource() == this.transition)
         {
+                                this.refreshMatrix();
+
             this.panelLv1.resetBools();
             String name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
             this.panelLv1.setLabelDiag(name);
@@ -260,10 +255,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 //            this.labelCoected[2] = this.panelLv1.getState2();
             
 //            this.printMainLabel();
-            
             this.panelLv1.setIsTransition(true);
-                    this.refreshMatrix();
-
         }
        
         
