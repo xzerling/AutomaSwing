@@ -47,6 +47,7 @@ public class Automaton
             }
         }       
         if(length > 0){return false;}
+        else if(length == 0 && !this.finalStates.contains(initial)){return false;}
         else{return true;}
     }
     
