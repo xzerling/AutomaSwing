@@ -83,6 +83,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     public JMainPanel()
     {
         this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
+        while(this.name.equals(""))
+        {
+            this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
+        }
         this.characters = new ArrayList<>();
         
         String[] array = this.name.split(",");
@@ -248,7 +252,13 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 
             this.panelLv1.resetBools();
             String name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
+            while(name.equals(""))
+            {
+                name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
+
+            }
             this.panelLv1.setLabelDiag(name);
+
 //            System.out.println("despues del dialog");
 //            this.labelCoected[0] = this.panelLv1.getState0();
 //            this.labelCoected[1] = this.panelLv1.getState1();
@@ -270,6 +280,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             Automaton NDFA = new Automaton(in, states, trans, states, characters, input);
             
             Automaton DFA = NDFA.convertToDFA(in, states, trans, states, characters, input);
+            
+            for (int i = 0; i < endStates.size(); i++) {
+                System.out.println(endStates.get(i));
+            }
             
             boolean verify = DFA.verify();
             

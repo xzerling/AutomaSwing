@@ -46,8 +46,9 @@ public class Automaton
                 }
             }
         }       
+        System.out.println("final: " + finalStates.get(0));
         if(length > 0){return false;}
-        else if(length == 0 && !this.finalStates.contains(initial)){return false;}
+        else if(!this.finalStates.contains(initial) && length == 0){return false;}
         else{return true;}
     }
     
