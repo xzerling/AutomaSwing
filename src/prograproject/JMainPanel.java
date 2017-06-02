@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -46,6 +47,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private JButton transNode;
     private JButton endNode;
     private JButton transition;
+    private JButton verIntegrity;
     
     private JButton verWord;
     
@@ -79,6 +81,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private State labelCoected[] = new State[3];
     private String name;
     private ArrayList<Character> characters;
+    private boolean checkInteg;
     
     public JMainPanel()
     {
@@ -88,11 +91,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
         }
         this.characters = new ArrayList<>();
-        
+        this.characters.add('_');
         String[] array = this.name.split(",");
         for (int i = 0; i < array.length; i++) {
             this.characters.add(array[i].charAt(0));
         }
+        
         
         this.setLayout(new BorderLayout());
         Dimension dimension = new Dimension(JMainPanel.WIDTH, JMainPanel.HEIGHT);
@@ -135,11 +139,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         endNode.addActionListener(this);
         transition.addActionListener(this);
         verWord.addActionListener(this);
+        verIntegrity.addActionListener(this);
         
         transNode.setEnabled(false);
         endNode.setEnabled(false);
         transition.setEnabled(false);
-        
+        verIntegrity.setEnabled(false);
     }
 
     public JFrame frameMaker(JDrawPanel panel)
@@ -177,6 +182,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.transNode = new JButton();
         this.endNode = new JButton();
         this.transition = new JButton();
+        this.verIntegrity = new JButton();
         
         this.startNode.setIcon(imgbutton1);
         this.transNode.setIcon(imgbutton2);
@@ -186,24 +192,31 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.verWord = new JButton("Verificar palabra");
         this.verWord.setBounds(120,10 ,150 ,20);
         
+        this.verWord.setEnabled(false);
+        
         this.startNode.setPreferredSize(new Dimension(64,64));
         this.transNode.setPreferredSize(new Dimension(64,64));
         this.endNode.setPreferredSize(new Dimension(64,64));
         this.transition.setPreferredSize(new Dimension(64,64));
-        
+        this.verIntegrity.setPreferredSize(new Dimension(64,64));
+                
         startNode.setMaximumSize(new Dimension(64,64));
         transNode.setMaximumSize(new Dimension(64,64));
         endNode.setMaximumSize(new Dimension(64,64));
         transition.setMaximumSize(new Dimension(64,64));
+        verIntegrity.setMaximumSize(new Dimension(64,64));
 
         
         toolbar.add(this.startNode);
         toolbar.add(this.transNode);
         toolbar.add(this.endNode);
         toolbar.add(this.transition);
+        toolbar.add(this.verIntegrity);
         
         northPanel.add(toolbar,1,0);
         southPanel.add(this.verWord );
+        
+        
         
         frame = new JFrame();
         frame.setJMenuBar(menuBar);
@@ -232,6 +245,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             transNode.setEnabled(true);
             endNode.setEnabled(true);
             transition.setEnabled(true);
+            verIntegrity.setEnabled(true);
         }
         
         if(e.getSource()==transNode)
@@ -248,11 +262,11 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource() == this.transition)
         {
-                                this.refreshMatrix();
+            this.refreshMatrix();
 
             this.panelLv1.resetBools();
             String name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
-            while(name.equals(""))
+            while(name.equals("") || !this.characters.contains(name.charAt(0)))
             {
                 name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
 
@@ -295,6 +309,54 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             {
                 JOptionPane.showMessageDialog(this ,"¡Palabra Rechazada! :-(",
                 "Verificar Palabra", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        if(e.getSource()== verIntegrity)
+        {
+            ArrayList<Transition> transitions = panelLv1.getTransitions();
+            ArrayList<String> finStates = panelLv1.getFinalStates();
+            String in = panelLv1.getStart();
+            
+            if(finStates.isEmpty())
+            {
+                JOptionPane.showMessageDialog(this,"No cumple con las restricciones de integridad", 
+                "Restriccionoes de Integridad", JOptionPane.ERROR_MESSAGE );
+            }
+            else
+            {
+                LinkedList<String> queue = new LinkedList<>();
+                boolean complete = false;
+                
+                queue.add(in);
+                
+                while(!queue.isEmpty())
+                {
+                    in = queue.poll();
+                    
+                    if(finStates.contains(in))
+                    {
+                        complete = true;
+                        break;
+                    }
+                    for (int i = 0; i < transitions.size(); i++) {
+                        if(transitions.get(i).getStart().equals(in) && !transitions.get(i).getEnd().equals(in))
+                        {
+                            queue.add(transitions.get(i).getEnd());
+                        }
+                    }
+                }
+                
+                if(complete)
+                {
+                    JOptionPane.showMessageDialog(this, "Cumple con las restricciones de integridad");
+                    this.verWord.setEnabled(true);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this,"No cumple con las restricciones de integridad", 
+                    "Restriccionoes de Integridad", JOptionPane.ERROR_MESSAGE );
+                }
             }
         }
     }
