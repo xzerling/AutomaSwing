@@ -24,10 +24,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.QuadCurve2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.ProcessBuilder.Redirect.from;
 import java.util.ArrayList;
 import javafx.scene.shape.Line;
 import javax.imageio.ImageIO;
@@ -82,7 +86,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private String labelDiag;
     private JTextArea textArea = new JTextArea();
     public String transAsString;
-
+    private Marker marker;
+    private MouseHandler handler;
     
     public JDrawPanel()
     {
@@ -99,7 +104,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
         this.trans = new ArrayList<>();
-        
+        this.handler = new MouseHandler(null, null);
+        this.marker = new Marker(new Point2D.Double(0, 0));
         
         
         
@@ -154,7 +160,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
         
-        g2.setStroke(new BasicStroke(5));   
+        g2.setStroke(new BasicStroke(3));   
         
         if (startPoints != null)
         {
@@ -184,10 +190,13 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             {
                 if(this.transitionPoints.get(k)[1] != null)
                 {
-                    System.out.println("p1: "+this.transitionPoints.get(k)[0].getPoint() +"p2: " +this.transitionPoints.get(k)[1].getPoint());
+//                    Point2D.Double control = new Point2D.Double(this.transitionPoints.get(k)[0].x, this.transitionPoints.get(k)[0].y);
+//                    this.marker = new Marker(control);
+//                    System.out.println("p1: "+this.transitionPoints.get(k)[0].getPoint() +"p2: " +this.transitionPoints.get(k)[1].getPoint());
                     this.drawTrans(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], this.transitionPoints.get(k)[2], g2);
+                    this.drawTrans(g, this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1]);
                     this.repaintNodes(g);
-                    System.out.println("dibujó");   
+//                    System.out.println("dibujó");   
                 }
             }
         }
@@ -200,7 +209,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     @Override
     public void mouseClicked(MouseEvent e)
     {
-        System.out.println("click");
+//        System.out.println("click");
         if(isIsStartNode() && !overlap(e))
         {
             State state = new State(e.getPoint(), labelMaker(states));
@@ -240,13 +249,13 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 State p2 = selected[1];
                 //etiqueta como parametro de state, point queda null
                 //
-                System.out.println("etiqueta a guardar: "+this.labelDiag);
+//                System.out.println("etiqueta a guardar: "+this.labelDiag);
                 State p3 = new State(null, this.labelDiag);
                 this.selected[2] = p3;
                 
-                System.out.println(selected[0].getPoint()+"");
-                System.out.println(selected[1].getPoint()+"");
-                System.out.println(selected[2].getState()+"");
+//                System.out.println(selected[0].getPoint()+"");
+//                System.out.println(selected[1].getPoint()+"");
+//                System.out.println(selected[2].getState()+"");
                 
                 State localSelected[] = new State[3];
                 localSelected[0] = p1;
@@ -262,12 +271,12 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                     this.transitionPoints.add(localSelected);
                 
                 this.setIsTransition(false);
-                this.printTrans();
+//                this.printTrans();
                 this.writeTrans();
 
                 this.flushTrans();
 //                System.out.println("FLUSH!");
-                this.printTrans();
+//                this.printTrans();
 
             }
             System.out.println("FUERA CLICK");
@@ -368,7 +377,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 //        int lambda = 10;
 //        label.setState(this.transDialogMaker());
         g.drawLine(from.getPoint().x+DEFAULT_LINE_SIZE, from.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().x+DEFAULT_LINE_SIZE, to.getPoint().y+DEFAULT_LINE_SIZE);
-        g.drawString(label.getState(), (from.getPoint().x+to.getPoint().x+2*DEFAULT_LINE_SIZE-30)/2, (from.getPoint().y+to.getPoint().y+2*DEFAULT_LINE_SIZE)/2);
+//        g.setColor(Color.red);
+        g.drawString(label.getState(), (from.getPoint().x+to.getPoint().x+2*DEFAULT_LINE_SIZE)/2, (from.getPoint().y+to.getPoint().y+2*DEFAULT_LINE_SIZE)/2+30);
+        g.setColor(Color.BLACK);
 //        Polygon poly = new Polygon(new int[] {to.getPoint().x, to.getPoint().x-lambda, to.getPoint().x-lambda}, new int[] {to.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().y+lambda+10, to.getPoint().y+DEFAULT_SIZE-20}, 3);
 //        g.drawPolygon(poly);
         
@@ -910,6 +921,39 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         
 //        this.transitionPoints.add(localSelected);
         
+    }
+    
+    public void drawTrans(Graphics g, State from, State to)
+    {
+        Graphics2D g2D = (Graphics2D) g;
+        Point2D.Double startPoint = new Point2D.Double(from.getPoint().x, from.getPoint().y);
+        Point2D.Double endPoint = new Point2D.Double(to.getPoint().x, to.getPoint().y);
+        Point2D.Double controlPoint = new Point2D.Double(from.getPoint().x-50, from.getPoint().y-50);
+        
+        QuadCurve2D.Double quadCurve = new QuadCurve2D.Double
+        ( 
+          from.getPoint().x, from.getPoint().y, 
+          controlPoint.x, controlPoint.y,endPoint.x, endPoint.y);
+        
+        this.marker = new Marker(controlPoint);
+        MouseHandler handler = new MouseHandler(this, marker);
+        
+        quadCurve.ctrlx = marker.getCenter().x;
+        quadCurve.ctrly = marker.getCenter().y;
+
+
+      g2D.setPaint(Color.BLUE);
+      g2D.draw(quadCurve);
+
+      g2D.setPaint(Color.RED);
+      marker.draw(g2D);       
+      System.out.println("marker on jdraw: "+this.marker);
+      System.out.println("marker center on jdraw: "+this.marker.center);
+//              this.handler.setMouseHandler(this, this.marker);
+              this.addMouseListener(handler);
+              this.addMouseMotionListener(handler);
+      
+
     }
 
 }
