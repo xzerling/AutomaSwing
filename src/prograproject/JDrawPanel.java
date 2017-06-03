@@ -251,7 +251,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
         
-        g2.setStroke(new BasicStroke(3));   
+        g2.setStroke(new BasicStroke(5));   
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (startPoints != null)

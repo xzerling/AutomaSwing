@@ -43,14 +43,14 @@ public class MouseHandler extends MouseInputAdapter
     
     public void mousePressed(MouseEvent e) 
     {
-        System.out.println("selected on moushandler: "+this.selected);
-        System.out.println("Marker on mousehandler: "+this.ctrlQuad);
-        System.out.println("Marker center: "+this.ctrlQuad.getCenter());
+//        System.out.println("selected on moushandler: "+this.selected);
+//        System.out.println("Marker on mousehandler: "+this.ctrlQuad);
+//        System.out.println("Marker center: "+this.ctrlQuad.getCenter());
       if (this.ctrlQuad.contains(e.getX(), e.getY()))
       {
         this.selected = this.ctrlQuad;
-          System.out.println("selected: "+this.selected);
-          System.out.println("selected center: "+this.selected.getCenter());
+//          System.out.println("selected: "+this.selected);
+//          System.out.println("selected center: "+this.selected.getCenter());
       }
     }
     public void mouseReleased(MouseEvent e) 
