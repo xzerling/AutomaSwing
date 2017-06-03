@@ -211,20 +211,21 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     public String writeTrans()
     {
         String transitions = new String();
-//        System.out.println("TRANS EN EL PANEL!!!!");
+        System.out.println("TRANS EN EL PANEL!!!!");
 
         for (int k = 0; k < this.transitionPoints.size(); k++)
             {
                 this.transAsString = ("f( "+this.transitionPoints.get(k)[0].getState() +" ,  " + this.transitionPoints.get(k)[2].getState()+ " ) = "+this.transitionPoints.get(k)[1].getState()+"\n");
                 Transition t = new Transition(this.transitionPoints.get(k)[0].getState(), this.transitionPoints.get(k)[1].getState(), this.transitionPoints.get(k)[2].getState().charAt(0));
                 this.trans.add(t);
-//                System.out.println(transitions);
+                transitions = transitions.concat("\n").concat(t.repTransition());
 
             }
-//            System.out.println("en clase transition");
+            System.out.println("en clase transition");
             this.printTransOnArraylist();
-//            System.out.println("en clase transition");
-
+            System.out.println("en clase transition");
+            
+        this.transAsString = transitions;
         return transitions;
     }
 

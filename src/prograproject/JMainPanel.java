@@ -48,6 +48,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private JButton endNode;
     private JButton transition;
     private JButton verIntegrity;
+    private JButton refresh;
     
     private JButton verWord;
     
@@ -140,11 +141,13 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         transition.addActionListener(this);
         verWord.addActionListener(this);
         verIntegrity.addActionListener(this);
+        refresh.addActionListener(this);
         
         transNode.setEnabled(false);
         endNode.setEnabled(false);
         transition.setEnabled(false);
         verIntegrity.setEnabled(false);
+        refresh.setEnabled(false);
     }
 
     public JFrame frameMaker(JDrawPanel panel)
@@ -183,6 +186,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.endNode = new JButton();
         this.transition = new JButton();
         this.verIntegrity = new JButton();
+        this.refresh = new JButton();
         
         this.startNode.setIcon(imgbutton1);
         this.transNode.setIcon(imgbutton2);
@@ -199,12 +203,14 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.endNode.setPreferredSize(new Dimension(64,64));
         this.transition.setPreferredSize(new Dimension(64,64));
         this.verIntegrity.setPreferredSize(new Dimension(64,64));
+        this.refresh.setPreferredSize(new Dimension(64,64));
                 
         startNode.setMaximumSize(new Dimension(64,64));
         transNode.setMaximumSize(new Dimension(64,64));
         endNode.setMaximumSize(new Dimension(64,64));
         transition.setMaximumSize(new Dimension(64,64));
         verIntegrity.setMaximumSize(new Dimension(64,64));
+        refresh.setMaximumSize(new Dimension(64,64));
 
         
         toolbar.add(this.startNode);
@@ -212,6 +218,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         toolbar.add(this.endNode);
         toolbar.add(this.transition);
         toolbar.add(this.verIntegrity);
+        toolbar.add(this.refresh);
         
         northPanel.add(toolbar,1,0);
         southPanel.add(this.verWord );
@@ -262,6 +269,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource() == this.transition)
         {
+            this.refresh.setEnabled(true);
             this.refreshMatrix();
 
             this.panelLv1.resetBools();
@@ -359,6 +367,11 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                 }
             }
         }
+        
+        if(e.getSource() == refresh)
+        {
+            refreshMatrix();
+        }
     }
           
     public JDrawPanel panelMaker()
@@ -426,8 +439,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.trans = this.panelLv1.transAsString;
         System.out.println(trans);
         System.out.println(ta.getText());
-        this.ta.append(trans);
-//        this.rightPanel.add(ta);
+        this.ta.setText(trans);
     }
     
     private void refreshMatrix()
