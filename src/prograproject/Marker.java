@@ -5,6 +5,7 @@
  */
 package prograproject;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -17,17 +18,21 @@ public class Marker
 {
     Ellipse2D.Double circle; 
     Point2D.Double center; 
-    static final double radius = 5;
+    String label;
+    static final double radius = 12;
     
-    public Marker(Point2D.Double control) 
+    public Marker(Point2D.Double control, String label) 
     {
       center = control; 
       circle = new Ellipse2D.Double(control.x - radius, control.y - radius, 2.0 * radius,
           2.0 * radius);
+      this.label = label;
     }
     public void draw(Graphics2D g2D) 
     {
-      g2D.draw(circle);
+      g2D.fill(circle);
+      g2D.setColor(Color.WHITE);
+      g2D.drawString(label, (float)(center.x-2), (float)(center.y+4));
     }
 
     Point2D.Double getCenter() 

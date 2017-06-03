@@ -21,11 +21,13 @@ public class MouseHandler extends MouseInputAdapter
 //     Marker ctrlCubic2;
      JDrawPanel pane;
      Marker selected;
+     ArrowHead head;
 
-    public MouseHandler(JDrawPanel pane, Marker ctrlQuad) 
+    public MouseHandler(JDrawPanel pane, Marker ctrlQuad, ArrowHead head) 
     {
         this.pane = pane;
         this.ctrlQuad = ctrlQuad;
+        this.head = head;
     }
           
     public void setMouseHandler(JDrawPanel pane, Marker ctrlQuad)
@@ -41,14 +43,14 @@ public class MouseHandler extends MouseInputAdapter
     
     public void mousePressed(MouseEvent e) 
     {
-        System.out.println("selected on moushandler");
-        System.out.println(this.selected);
+        System.out.println("selected on moushandler: "+this.selected);
         System.out.println("Marker on mousehandler: "+this.ctrlQuad);
         System.out.println("Marker center: "+this.ctrlQuad.getCenter());
       if (this.ctrlQuad.contains(e.getX(), e.getY()))
       {
         this.selected = this.ctrlQuad;
           System.out.println("selected: "+this.selected);
+          System.out.println("selected center: "+this.selected.getCenter());
       }
     }
     public void mouseReleased(MouseEvent e) 
@@ -57,12 +59,12 @@ public class MouseHandler extends MouseInputAdapter
     }
     public void mouseDragged(MouseEvent e)
     {
-        System.out.println("selected on dragg: "+this.selected);
+//        System.out.println("selected on dragg: "+this.selected);
       if (this.selected != null) 
       {
         this.selected.setLocation(e.getX(), e.getY());
         pane.repaint(); 
-          System.out.println("relocalizado y repaint");
+//        System.out.println("relocalizado y repaint");
       }
     }
 }
