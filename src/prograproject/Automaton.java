@@ -2,6 +2,7 @@
 package prograproject;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  *
@@ -29,27 +30,31 @@ public class Automaton
     public boolean verify()
     {
         String initial = initialState;
-        char[] array = input.toCharArray();
-        int length = array.length;
-        
-        for (int i = 0; i < array.length; i++) 
+        Stack<String> stack = new Stack<>();
+        stack.push(initial);
+        while(!stack.isEmpty())
         {
-            char sym = array[i];
-            
-            for (int j = 0; j < transitions.size(); j++) 
-            {
-                if(transitions.get(j).getStart().equals(initial) && transitions.get(j).getSymbol() == sym)
-                {
-                    initial = transitions.get(j).getEnd();
-                    length--;
-                    j = transitions.size()+1;
+            String current = stack.pop();
+            for(int i = 0; i < this.input.length(); i++) {
+                char c = this.input.charAt(i);
+                for(Transition t : this.transitions) {
+                    if(t.getStart().equals(current) && t.getSymbol()==c)
+                    {
+                        stack.push(t.getEnd());
+                    }
+                    else if(t.getStart().equals(current) && t.getSymbol()==c)
+                    {
+                        stack.push(t.getEnd());
+                        i--;
+                    }
                 }
             }
-        }       
-        System.out.println("final: " + finalStates.get(0));
-        if(length > 0){return false;}
-        else if(!this.finalStates.contains(initial) && length == 0){return false;}
-        else{return true;}
+            if(this.finalStates.contains(current))
+            {
+                return true;
+            }
+        }
+    return false;
     }
     
     public Automaton convertToDFA(String ini, ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fin, ArrayList<Character> alph, String in)
