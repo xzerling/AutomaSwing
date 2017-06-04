@@ -67,7 +67,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private ImageIcon  imgbutton2;
     private ImageIcon  imgbutton3;
     private ImageIcon  imgbutton4;
-    
+    private final ImageIcon imgbutton5;
+    private final ImageIcon imgbutton6;
+
     
     private static final int WIDTH = 600;
     private static final int HEIGHT =600;
@@ -83,7 +85,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private String name;
     private ArrayList<Character> characters;
     private boolean checkInteg;
-    
+
     public JMainPanel()
     {
         this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
@@ -125,6 +127,18 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         Image img4 = icon4.getImage() ;  
         Image newimg4 = img4.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton4 = new ImageIcon(newimg4);
+        
+        ImageIcon icon5 = new ImageIcon("src/prograproject/tick.png");
+        Image img5 = icon5.getImage() ;  
+        Image newimg5 = img5.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton5 = new ImageIcon(newimg5);
+        
+        ImageIcon icon6 = new ImageIcon("src/prograproject/refresh.png");
+        Image img6 = icon6.getImage() ;  
+        Image newimg6 = img6.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton6 = new ImageIcon(newimg6);
+        
+        
         
 
         
@@ -192,6 +206,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.transNode.setIcon(imgbutton2);
         this.endNode.setIcon(imgbutton3);
         this.transition.setIcon(imgbutton4);
+        this.verIntegrity.setIcon(imgbutton5);
+        this.refresh.setIcon(imgbutton6);
         
         this.verWord = new JButton("Verificar palabra");
         this.verWord.setBounds(120,10 ,150 ,20);
