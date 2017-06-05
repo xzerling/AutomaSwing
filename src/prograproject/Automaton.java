@@ -27,13 +27,14 @@ public class Automaton
         this.input = in;
     }
     
-    public boolean verify()
+ public boolean verify()
     {
         Stack<String> stack = new Stack<>();
         String current = this.initialState;
         stack.push(current);
         int stringToConsume = this.input.length();
         int cont = 0;
+        boolean consume = false;
         while(!stack.isEmpty())
         {
             for(int i = cont; i < input.length(); i++) 
@@ -48,7 +49,7 @@ public class Automaton
                     if(t.getStart().equals(current) && t.getSymbol()==c && stringToConsume > 0){
                         stack.push(t.getEnd());
                         System.out.println("Estado agregado: " + t.getEnd());
-                        stringToConsume--;
+                        consume = true;
                         cont = i;
                     }
                     if(t.getStart().equals(current) && t.getSymbol()=='_')
@@ -58,6 +59,10 @@ public class Automaton
                     }
                 }
                 if(stack.isEmpty()){break;}
+                if(consume){
+                    stringToConsume--;
+                }
+                consume = false;
             }
             if(this.finalStates.contains(current) && stringToConsume == 0)
             {
@@ -82,6 +87,7 @@ public class Automaton
         
         return false;
     }
+ 
     
     public Automaton convertToDFA(String ini, ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fin, ArrayList<Character> alph, String in)
     {
