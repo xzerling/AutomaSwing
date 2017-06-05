@@ -327,7 +327,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                 System.out.println(endStates.get(i));
             }
             
-            boolean verify = DFA.verify();
+            boolean verify = NDFA.verify();
             
             if(verify)
             {
