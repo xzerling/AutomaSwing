@@ -58,11 +58,10 @@ public class Automaton
                         i--;
                     }
                 }
-                if(stack.isEmpty()){break;}
-                if(consume){
-                    stringToConsume--;
-                }
+                if(consume){stringToConsume--;}
                 consume = false;
+                System.out.println("Lo que queda por consumir = " + stringToConsume);
+                if(stack.isEmpty()){break;}
             }
             if(this.finalStates.contains(current) && stringToConsume == 0)
             {

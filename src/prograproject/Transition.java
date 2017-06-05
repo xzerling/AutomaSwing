@@ -5,7 +5,8 @@ package prograproject;
  *
  * @author Nicolas
  */
-public class Transition {
+public class Transition 
+{
     private String start, end;
     private char symbol; 
     
@@ -35,4 +36,5 @@ public class Transition {
     {
         return ("f( " + this.start + " , " + this.symbol + " ) = " + this.end);
     }
+
 }

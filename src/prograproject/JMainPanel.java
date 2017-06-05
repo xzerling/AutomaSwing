@@ -319,13 +319,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             ArrayList<Transition> trans = this.panelLv1.getTransitions();
             ArrayList<String> endStates = this.panelLv1.getFinalStates();
             
-            Automaton NDFA = new Automaton(in, states, trans, states, characters, input);
-            
-            Automaton DFA = NDFA.convertToDFA(in, states, trans, states, characters, input);
-            
-            for (int i = 0; i < endStates.size(); i++) {
-                System.out.println(endStates.get(i));
-            }
+            Automaton NDFA = new Automaton(in, states, trans, endStates, characters, input);
             
             boolean verify = NDFA.verify();
             
