@@ -29,32 +29,58 @@ public class Automaton
     
     public boolean verify()
     {
-        String initial = initialState;
         Stack<String> stack = new Stack<>();
-        stack.push(initial);
+        String current = this.initialState;
+        stack.push(current);
+        int stringToConsume = this.input.length();
+        int cont = 0;
         while(!stack.isEmpty())
         {
-            String current = stack.pop();
-            for(int i = 0; i < this.input.length(); i++) {
-                char c = this.input.charAt(i);
-                for(Transition t : this.transitions) {
-                    if(t.getStart().equals(current) && t.getSymbol()==c)
-                    {
+            for(int i = cont; i < input.length(); i++) 
+            {
+                char c = input.charAt(i);
+                current = stack.pop();
+                System.out.println("Current: " + current);
+                System.out.println("Caracter: " + c);
+                if(!this.sigma.contains(c)){return false;}
+                for(Transition t : this.transitions) 
+                {
+                    if(t.getStart().equals(current) && t.getSymbol()==c && stringToConsume > 0){
                         stack.push(t.getEnd());
+                        System.out.println("Estado agregado: " + t.getEnd());
+                        stringToConsume--;
+                        cont = i;
                     }
-                    else if(t.getStart().equals(current) && t.getSymbol()==c)
+                    if(t.getStart().equals(current) && t.getSymbol()=='_')
                     {
                         stack.push(t.getEnd());
                         i--;
                     }
                 }
+                if(stack.isEmpty()){break;}
             }
-            if(this.finalStates.contains(current))
+            if(this.finalStates.contains(current) && stringToConsume == 0)
             {
+                System.out.println("Entra al print cuando llega a un estado final");
                 return true;
             }
+            else if(!this.finalStates.contains(current) && !stack.isEmpty() && stringToConsume == 0)
+            {
+                
+                System.out.println("Verifica si en el stack quedan estados");
+                while(!stack.isEmpty())
+                {
+                    String st = stack.pop();
+                    System.out.println("st: " + st);
+                    if(this.finalStates.contains(st))
+                    {
+                        return true;
+                    }
+                }
+            }
         }
-    return false;
+        
+        return false;
     }
     
     public Automaton convertToDFA(String ini, ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fin, ArrayList<Character> alph, String in)
