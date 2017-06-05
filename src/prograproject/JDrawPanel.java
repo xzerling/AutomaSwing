@@ -341,21 +341,46 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         {
             x = tip.x - barb * Math.cos(rho);
             y = tip.y - barb * Math.sin(rho);
-            g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
+//            g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
             
             //Para cambiar la posicion de la punta
-//            if(theta < 0)
-//            {
-//                g2.draw(new Line2D.Double(tip.x+30, tip.y+30, x+30, y+30));
-//                rho = theta - phi;
-//
-//            }
-//            if(theta >=1)
-//            {
-//                g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
-//                rho = theta - phi;
-//
-//            }
+            if(tip.x > tail.x)
+            {
+                if(tip.y < tail.y)
+                {
+                    g2.draw(new Line2D.Double(tip.x-38, tip.y, x-38, y));
+                }
+                else
+                {
+                    g2.draw(new Line2D.Double(tip.x-38, tip.y, x-38, y));
+                }
+            }
+            else if(tip.x < tail.x)
+            {
+                if(tip.y < tail.y)
+                {
+//                    g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
+                    g2.draw(new Line2D.Double(tip.x + DEFAULT_LINE_SIZE, tip.y, x + DEFAULT_LINE_SIZE, y));
+                }
+                else
+                {
+                    g2.draw(new Line2D.Double(tip.x + DEFAULT_LINE_SIZE, tip.y, x + DEFAULT_LINE_SIZE, y));
+                }
+                
+            }
+            
+            /*if(theta < 0)
+            {
+                g2.draw(new Line2D.Double(tip.x+30, tip.y+30, x+30, y+30));
+                rho = theta - phi;
+
+            }
+            if(theta >=1)
+            {
+                g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
+                rho = theta - phi;
+
+            }*/
 
             rho = theta - phi;
         }
@@ -512,20 +537,17 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 /*if(this.transitionPoints.size() >= 1)
                 overlapTransition(localSelected);*/
                 
-                Point2D.Double startPoint = new Point2D.Double(p1.getPoint().x, p1.getPoint().y);
-                Point2D.Double endPoint = new Point2D.Double(p2.getPoint().x, p2.getPoint().y+38);
                 Point sp = new Point(p1.getPoint().x, p1.getPoint().y);
-                Point ep = new Point(p2.getPoint().x+38, p2.getPoint().y+38);
+                Point ep = new Point(p2.getPoint().x, p2.getPoint().y);
 //                Point2D.Double controlPoint = new Point2D.Double((p1.getPoint().x+p2.getPoint().x)/2,((p1.getPoint().y+p2.getPoint().y)/2));
                 Point2D.Double controlPoint = new Point2D.Double(p2.getPoint().x,(p2.getPoint().y));
         
                  QuadCurve2D.Double quadCurve = new QuadCurve2D.Double
                 ( 
-                 p1.getPoint().x+38, p1.getPoint().y+38, 
-                controlPoint.x, controlPoint.y,endPoint.x, endPoint.y);
+                 sp.x+DEFAULT_LINE_SIZE, sp.y+DEFAULT_LINE_SIZE, 
+                controlPoint.x, controlPoint.y,ep.x+38, ep.y+38);
                  Marker control = new Marker(controlPoint, this.labelDiag);
                  ArrowHead ah = new ArrowHead(ep, sp);
-//                 this.drawArrowHead(g2, sp, ep, Color.yellow);
                 this.curves.add(quadCurve);
                 this.ctrls.add(control);
                 this.arrowHeads.add(ah);

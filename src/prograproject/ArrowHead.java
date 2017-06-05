@@ -38,12 +38,13 @@ public class ArrowHead
             x = tip.x - barb * Math.cos(rho);
             y = tip.y - barb * Math.sin(rho);
 
-            this.head = new Line2D.Double(tip.x, tip.y, x, y);
+//            this.head = new Line2D.Double(tip.x, tip.y, x, y);
 
             if(theta < 0)
             {
-            this.head = new Line2D.Double(tip.x+30, tip.y+30, x+30, y+30);
-                        rho = theta - phi;
+//                this.head = new Line2D.Double(tip.x+30, tip.y+30, x+30, y+30);
+                
+                rho = theta - phi;
 
             }
             rho = theta - phi;
