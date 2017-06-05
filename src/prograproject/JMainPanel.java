@@ -89,7 +89,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     public JMainPanel()
     {
         this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
-        while(this.name.equals(""))
+        if(this.name == null)
+        {
+            JOptionPane.showMessageDialog(this, "El progama se ha cerrado", "Mensaje", 2);
+            System.exit(0);
+        }
+        while(this.name == null || this.name.equals(""))
         {
             this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -166,6 +171,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 
     public JFrame frameMaker(JDrawPanel panel)
      {
+                 repaint();
+
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new GridLayout(1,1));
         JMenuBar menuBar = new JMenuBar();
@@ -250,7 +257,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         frame.add(southPanel, BorderLayout.SOUTH);
         frame.add(rightPanel , BorderLayout.LINE_END);
         frame.pack();
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setSize(new Dimension(900, 700));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return frame;
@@ -290,19 +297,16 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
 
             this.panelLv1.resetBools();
             String name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
-            while(name.equals("") || !this.characters.contains(name.charAt(0)))
+            if(name == null)
+            {
+                JOptionPane.showMessageDialog(this, "El progama se ha cerrado", "Mensaje", 2);
+                System.exit(0);
+            }
+            while(name == null || name.equals("") || !this.characters.contains(name.charAt(0)))
             {
                 name = JOptionPane.showInputDialog(this, "Ingrese etiqueta para transicion", "Transicion", JOptionPane.INFORMATION_MESSAGE);
-
             }
             this.panelLv1.setLabelDiag(name);
-
-//            System.out.println("despues del dialog");
-//            this.labelCoected[0] = this.panelLv1.getState0();
-//            this.labelCoected[1] = this.panelLv1.getState1();
-//            this.labelCoected[2] = this.panelLv1.getState2();
-            
-//            this.printMainLabel();
             this.panelLv1.setIsTransition(true);
         }
        
@@ -420,6 +424,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     @Override
     public void mouseClicked(MouseEvent e)
     {
+        refreshMatrix();
     }
 
     @Override
@@ -461,6 +466,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private void refreshMatrix()
     {
         this.setRightPanel(this.panelLv1.getTarnsitionTextArea());
+        System.out.println("0");
     }
 
 }
