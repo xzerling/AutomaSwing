@@ -2,6 +2,8 @@
 package prograproject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Stack;
 
 /**
@@ -15,6 +17,7 @@ public class Automaton
     private ArrayList<Transition> transitions;
     private ArrayList<String> finalStates;
     private ArrayList<Character> sigma;
+    private HashMap<String,HashSet<String>> repeatFlag;
     private String input;
     
     public Automaton(String ini,ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fs, ArrayList<Character> alph, String in)
@@ -25,66 +28,49 @@ public class Automaton
         this.finalStates = fs;
         this.sigma = alph;
         this.input = in;
+        this.repeatFlag = new HashMap<>();
+        for( String s : stat)
+        {
+            repeatFlag.put(s, new HashSet<>());
+        }
     }
     
- public boolean verify()
+ public boolean verify(Node n)
     {
-        Stack<String> stack = new Stack<>();
-        String current = this.initialState;
-        stack.push(current);
-        int stringToConsume = this.input.length();
-        int cont = 0;
-        boolean consume = false;
-        while(!stack.isEmpty())
+        //verificar 
+        if(repeatFlag.get(n.label).contains(n.text))
         {
-            for(int i = cont; i < input.length(); i++) 
-            {
-                char c = input.charAt(i);
-                current = stack.pop();
-                System.out.println("Current: " + current);
-                System.out.println("Caracter: " + c);
-                if(!this.sigma.contains(c)){return false;}
-                for(Transition t : this.transitions) 
-                {
-                    if(t.getStart().equals(current) && t.getSymbol()==c && stringToConsume > 0){
-                        stack.push(t.getEnd());
-                        System.out.println("Estado agregado: " + t.getEnd());
-                        consume = true;
-                        cont = i;
-                    }
-                    if(t.getStart().equals(current) && t.getSymbol()=='_')
-                    {
-                        stack.push(t.getEnd());
-                        i--;
-                    }
-                }
-                if(consume){stringToConsume--;}
-                consume = false;
-                System.out.println("Lo que queda por consumir = " + stringToConsume);
-                if(stack.isEmpty()){break;}
-            }
-            if(this.finalStates.contains(current) && stringToConsume == 0)
-            {
-                System.out.println("Entra al print cuando llega a un estado final");
-                return true;
-            }
-            else if(!this.finalStates.contains(current) && !stack.isEmpty() && stringToConsume == 0)
-            {
-                
-                System.out.println("Verifica si en el stack quedan estados");
-                while(!stack.isEmpty())
-                {
-                    String st = stack.pop();
-                    System.out.println("st: " + st);
-                    if(this.finalStates.contains(st))
-                    {
-                        return true;
-                    }
-                }
-            }
+            return false;
         }
-        
-        return false;
+        repeatFlag.get(n.label).add(n.text);
+        if(this.finalStates.contains(n.label) && n.text.equals(""))
+        {
+            return true;
+        }       
+        else
+        {
+            boolean b = false;
+            for(Transition t: this.transitions) 
+            {
+                if(!n.text.isEmpty())
+                {
+                    char c = n.text.charAt(0);
+                    if(t.getStart().equals(n.label) && t.getSymbol()==c)
+                    {
+                        b = b || verify(new Node(t.getEnd(), n.text.substring(1)));
+                    }
+                    else if(t.getStart().equals(n.label) && t.getSymbol()=='_')
+                    {
+                        b = b || verify(new Node(t.getEnd(), n.text));
+                    }
+                }
+                else if(t.getStart().equals(n.label) && t.getSymbol() == '_')
+                {
+                    b = b || verify(new Node(t.getEnd(), ""));
+                }
+            }
+            return b;
+        }
     }
  
     
@@ -101,6 +87,12 @@ public class Automaton
         dfaStates.add(state);
         
         String[][] matrix = new String[stat.size()][alph.size()+1];
+        
+        for (int i = 0; i < stat.size(); i++) {
+            for (int j = 0; j < alph.size(); j++) {
+                matrix[i][j] = " ";
+            }
+        }
         
         for (int i = 0; i < stat.size(); i++)
         {

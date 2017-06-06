@@ -111,9 +111,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         barb = 20;
         
         try{
-            img = ImageIO.read(new File("src/prograproject/dc6.png"));            
-            img2 = ImageIO.read(new File("src/prograproject/dc4.png"));            
-            img3 = ImageIO.read(new File("src/prograproject/dc7.png"));            
+            img = ImageIO.read(getClass().getResource("dc6.png"));            
+            img2 = ImageIO.read(getClass().getResource("dc4.png"));            
+            img3 = ImageIO.read(getClass().getResource("dc7.png"));            
             }
             catch(IOException e)
             {

@@ -113,32 +113,32 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         super.addMouseMotionListener(this);
         
         
-        ImageIcon icon = new ImageIcon("src/prograproject/dc6.png");
+        ImageIcon icon = new ImageIcon(getClass().getResource("dc6.png"));
         Image img = icon.getImage() ;  
         Image newimg = img.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton1 = new ImageIcon(newimg);
         
-        ImageIcon icon2 = new ImageIcon("src/prograproject/dc4.png");
+        ImageIcon icon2 = new ImageIcon(getClass().getResource("dc4.png"));
         Image img2 = icon2.getImage() ;  
         Image newimg2 = img2.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton2 = new ImageIcon(newimg2);
         
-        ImageIcon icon3 = new ImageIcon("src/prograproject/dc7.png");
+        ImageIcon icon3 = new ImageIcon(getClass().getResource("dc7.png"));
         Image img3 = icon3.getImage() ;  
         Image newimg3 = img3.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton3 = new ImageIcon(newimg3);
         
-        ImageIcon icon4 = new ImageIcon("src/prograproject/arrow.png");
+        ImageIcon icon4 = new ImageIcon(getClass().getResource("arrow.png"));
         Image img4 = icon4.getImage() ;  
         Image newimg4 = img4.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton4 = new ImageIcon(newimg4);
         
-        ImageIcon icon5 = new ImageIcon("src/prograproject/tick.png");
+        ImageIcon icon5 = new ImageIcon(getClass().getResource("tick.png"));
         Image img5 = icon5.getImage() ;  
         Image newimg5 = img5.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton5 = new ImageIcon(newimg5);
         
-        ImageIcon icon6 = new ImageIcon("src/prograproject/refresh.png");
+        ImageIcon icon6 = new ImageIcon(getClass().getResource("refresh.png"));
         Image img6 = icon6.getImage() ;  
         Image newimg6 = img6.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton6 = new ImageIcon(newimg6);
@@ -322,7 +322,9 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             Automaton NDFA = new Automaton(in, states, trans, endStates, characters, input);
             
             System.out.println("Cantidad de Transiciones: " + trans.size());
-            boolean verify = NDFA.verify();
+            
+            Node n = new Node(in, input.replaceAll("_", ""));
+            boolean verify = NDFA.verify(n);
             
             if(verify)
             {
