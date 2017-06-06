@@ -21,13 +21,11 @@ public class MouseHandler extends MouseInputAdapter
 //     Marker ctrlCubic2;
      JDrawPanel pane;
      Marker selected;
-     ArrowHead head;
 
-    public MouseHandler(JDrawPanel pane, Marker ctrlQuad, ArrowHead head) 
+    public MouseHandler(JDrawPanel pane, Marker ctrlQuad) 
     {
         this.pane = pane;
         this.ctrlQuad = ctrlQuad;
-        this.head = head;
     }
           
     public void setMouseHandler(JDrawPanel pane, Marker ctrlQuad)

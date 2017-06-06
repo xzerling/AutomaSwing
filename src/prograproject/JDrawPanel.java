@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.QuadCurve2D;
@@ -56,8 +57,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private ArrayList<State> standPoints;
     private ArrayList<State> endPoints;
     private ArrayList<State[]> transitionPoints;
-    private ArrayList<QuadCurve2D.Double> curves;
-    private ArrayList<Marker> ctrls;
+    private ArrayList<QuadArrow> arrows;
+
     
     private boolean isStartNode = false;
     private boolean isEndNode = false;
@@ -69,7 +70,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private State select = new State(null, null);
     private ArrayList<Integer> states;
     private ArrayList<Transition> trans;
-    private ArrayList<ArrowHead> arrowHeads;
 
     private boolean right = false;
     private boolean left = false;
@@ -104,10 +104,8 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
         this.trans = new ArrayList<>();
-        this.curves = new ArrayList<>();
-        this.ctrls = new ArrayList<>();
-        this.arrowHeads = new ArrayList<>();
-        this.handler = new MouseHandler(null, null, null);
+        this.arrows = new  ArrayList<>();
+        this.handler = new MouseHandler(null, null);
         
         phi = Math.toRadians(40);
         barb = 20;
@@ -247,26 +245,43 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         
         g2.setStroke(new BasicStroke(5));   
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+        double radius = 9;
         if (startPoints != null)
         {
             for (int i = 0; i < startPoints.size(); i++) {
                 g2.drawImage(img, startPoints.get(i).getPoint().x, startPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-                g.drawString(startPoints.get(i).getState(), startPoints.get(i).getPoint().x + DEFAULT_SIZE/2, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 5);
+                Ellipse2D.Double circle = new Ellipse2D.Double(startPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 1, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 4, 2.0 * radius,2.0 * radius);
+                g2.setColor(Color.red);
+                g2.fill(circle);
+                g2.setColor(Color.white);
+                g.drawString(startPoints.get(i).getState(), startPoints.get(i).getPoint().x + DEFAULT_SIZE/2, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 15);
+                g2.setColor(Color.BLACK);
             }
         }
         if (standPoints != null)
         {
-            for (int i = 0; i < standPoints.size(); i++) {
+            for (int i = 0; i < standPoints.size(); i++)
+            {
                 g2.drawImage(img2, standPoints.get(i).getPoint().x, standPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-                g.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 2);
+                Ellipse2D.Double circle = new Ellipse2D.Double(standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 4, 2.0 * radius,2.0 * radius);
+                g2.setColor(Color.red);
+                g2.fill(circle);
+                g2.setColor(Color.white);
+                g.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 15);
+                g2.setColor(Color.BLACK);
             }
         }
         if (endPoints != null)
         {
-            for (int i = 0; i < endPoints.size(); i++) {
+            for (int i = 0; i < endPoints.size(); i++) 
+            {
                 g2.drawImage(img3, endPoints.get(i).getPoint().x, endPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-                g.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 3);
+                Ellipse2D.Double circle = new Ellipse2D.Double(endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 6, 2.0 * radius,2.0 * radius);
+                g2.setColor(Color.red);
+                g2.fill(circle);
+                g2.setColor(Color.white);
+                g2.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 17);
+                g2.setColor(Color.BLACK);
             }
         }
         
@@ -276,55 +291,62 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             {
                 if(this.transitionPoints.get(k)[1] != null)
                 {
-//                    System.out.println("p1: "+this.transitionPoints.get(k)[0].getPoint() +"p2: " +this.transitionPoints.get(k)[1].getPoint());
-//                    this.drawTrans(this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1], this.transitionPoints.get(k)[2], g2);
-//                    this.drawTrans(g, this.transitionPoints.get(k)[0], this.transitionPoints.get(k)[1]);
-                    this.curves.get(k).ctrlx = this.ctrls.get(k).center.x;
-                    this.curves.get(k).ctrly = this.ctrls.get(k).center.y;
-                    g2.setPaint(Color.BLUE);
-                    g2.draw(this.curves.get(k));
-                    g2.setPaint(Color.RED);
-                    this.ctrls.get(k).draw(g2);
+                    this.arrows.get(k).getLine().ctrlx = this.arrows.get(k).getControl().center.x;
+                    this.arrows.get(k).getLine().ctrly = this.arrows.get(k).getControl().center.y;
+                    
+                    this.arrows.get(k).setX1(this.arrows.get(k).getControl().center.x);
+                    this.arrows.get(k).setY1(this.arrows.get(k).getControl().center.y);
+                    
+                    this.arrows.get(k).draw(g2);
                     g2.setPaint(Color.BLACK);
                     
-                    
-                    Point sp = new Point((int)this.curves.get(k).x1, (int)this.curves.get(k).y1);
-                    Point ep = new Point((int)this.curves.get(k).x2, (int)this.curves.get(k).y2);
-                    this.drawArrowHead(g2, ep, sp, Color.ORANGE);
-//                    this.arrowHeads.get(k).Paint(g2, Color.RED);
-                    g2.setPaint(Color.BLACK);
-
-                    this.handler = new MouseHandler(this, this.ctrls.get(k), this.arrowHeads.get(k));
+                    this.handler = new MouseHandler(this, this.arrows.get(k).getControl());
                     this.addMouseListener(handler);
                     this.addMouseMotionListener(handler);
+                    
                     this.repaintNodes(g);
                 }
             }
         }
-
     }
     
-    public void repaintNodes(Graphics g)
+public void repaintNodes(Graphics g)
     {
+        Graphics2D g2 = (Graphics2D) g;
+        double radius = 9;
         if (startPoints != null)
         {
-            for (int i = 0; i < startPoints.size(); i++) {
-                g.drawImage(img, startPoints.get(i).getPoint().x, startPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-                g.drawString(startPoints.get(i).getState(), startPoints.get(i).getPoint().x + DEFAULT_SIZE/2, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 5);
+            for (int i = 0; i < startPoints.size(); i++)
+            {
+                Ellipse2D.Double circle = new Ellipse2D.Double(startPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 1, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 4, 2.0 * radius,2.0 * radius);
+                g2.setColor(Color.red);
+                g2.fill(circle);
+                g2.setColor(Color.white);
+                g2.drawString(startPoints.get(i).getState(), startPoints.get(i).getPoint().x + DEFAULT_SIZE/2, startPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 15);
+                g2.setColor(Color.BLACK);
             }
         }
         if (standPoints != null)
         {
-            for (int i = 0; i < standPoints.size(); i++) {
-                g.drawImage(img2, standPoints.get(i).getPoint().x, standPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-                g.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 2);
+            for (int i = 0; i < standPoints.size(); i++) 
+            {
+                Ellipse2D.Double circle = new Ellipse2D.Double(standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 4, 2.0 * radius,2.0 * radius);
+                g2.setColor(Color.red);
+                g2.fill(circle);
+                g2.setColor(Color.white);
+                g2.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 15);
+                g2.setColor(Color.BLACK);
             }
         }
         if (endPoints != null)
         {
             for (int i = 0; i < endPoints.size(); i++) {
-                g.drawImage(img3, endPoints.get(i).getPoint().x, endPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
-                g.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 3);
+                Ellipse2D.Double circle = new Ellipse2D.Double(endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 6, 2.0 * radius,2.0 * radius);
+                g2.setColor(Color.red);
+                g2.fill(circle);
+                g2.setColor(Color.white);
+                g2.drawString(endPoints.get(i).getState(), endPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 7, endPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 17);
+                g2.setColor(Color.BLACK);
             }
         }
         
@@ -332,63 +354,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 //       this.buildTransPanel();
     }
     
-    private void drawArrowHead(Graphics2D g2, Point tip, Point tail, Color color)
-    {
-        g2.setPaint(color);
-        double dy = tip.y - tail.y;
-        double dx = tip.x - tail.x;
-        double theta = Math.atan2(dy, dx);
-        System.out.println("theta = " + Math.toDegrees(theta));
-        double x, y, rho = theta + phi;
-        for(int j = 0; j < 2; j++)
-        {
-            x = tip.x - barb * Math.cos(rho);
-            y = tip.y - barb * Math.sin(rho);
-//            g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
-            
-            //Para cambiar la posicion de la punta
-            if(tip.x > tail.x)
-            {
-                if(tip.y < tail.y)
-                {
-                    g2.draw(new Line2D.Double(tip.x-38, tip.y, x-38, y));
-                }
-                else
-                {
-                    g2.draw(new Line2D.Double(tip.x-38, tip.y, x-38, y));
-                }
-            }
-            else if(tip.x < tail.x)
-            {
-                if(tip.y < tail.y)
-                {
-//                    g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
-                    g2.draw(new Line2D.Double(tip.x + DEFAULT_LINE_SIZE, tip.y, x + DEFAULT_LINE_SIZE, y));
-                }
-                else
-                {
-                    g2.draw(new Line2D.Double(tip.x + DEFAULT_LINE_SIZE, tip.y, x + DEFAULT_LINE_SIZE, y));
-                }
-                
-            }
-            
-            /*if(theta < 0)
-            {
-                g2.draw(new Line2D.Double(tip.x+30, tip.y+30, x+30, y+30));
-                rho = theta - phi;
-
-            }
-            if(theta >=1)
-            {
-                g2.draw(new Line2D.Double(tip.x, tip.y, x, y));
-                rho = theta - phi;
-
-            }*/
-
-            rho = theta - phi;
-        }
-    }
-    
+    //Old method to draw transitions lines
     public void drawTrans(State from, State to, State label, Graphics2D g)
     {
         g.drawLine(from.getPoint().x+DEFAULT_LINE_SIZE, from.getPoint().y+DEFAULT_LINE_SIZE, to.getPoint().x+DEFAULT_LINE_SIZE, to.getPoint().y+DEFAULT_LINE_SIZE);
@@ -516,8 +482,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         }
          else if(this.isTransition)
         {
-//            System.out.println(this.getElementAt(e.getPoint().x, e.getPoint().y)); 
-//            this.printTrans();
             if(this.selected[0] == null)
             {
                 this.selected[0] = this.getElementAt(e.getPoint().x, e.getPoint().y);
@@ -536,30 +500,18 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 localSelected[1] = p2;
                 localSelected[2] = p3;
                 this.transitionPoints.add(localSelected);
-                //condicion si choca la flecha con algun elemento
-                /*if(this.transitionPoints.size() >= 1)
-                overlapTransition(localSelected);*/
                 
-                Point sp = new Point(p1.getPoint().x, p1.getPoint().y);
-                Point ep = new Point(p2.getPoint().x, p2.getPoint().y);
-//                Point2D.Double controlPoint = new Point2D.Double((p1.getPoint().x+p2.getPoint().x)/2,((p1.getPoint().y+p2.getPoint().y)/2));
-                Point2D.Double controlPoint = new Point2D.Double(p2.getPoint().x,(p2.getPoint().y));
-        
-                 QuadCurve2D.Double quadCurve = new QuadCurve2D.Double
-                ( 
-                 sp.x+DEFAULT_LINE_SIZE, sp.y+DEFAULT_LINE_SIZE, 
-                controlPoint.x, controlPoint.y,ep.x+38, ep.y+38);
-                 Marker control = new Marker(controlPoint, this.labelDiag);
-                 ArrowHead ah = new ArrowHead(ep, sp);
-                this.curves.add(quadCurve);
-                this.ctrls.add(control);
-                this.arrowHeads.add(ah);
+                //condicion si choca la flecha con algun elemento
+                
+                QuadArrow arrow = new QuadArrow(p1.getPoint().x+38, p1.getPoint().y+38, p2.getPoint().x+38, p2.getPoint().y+38, this.labelDiag);
+                arrow.make();
+                this.arrows.add(arrow);
+                
                 this.setIsTransition(false);
-//                this.printTrans();
+
                 this.writeTrans();
 
                 this.flushTrans();
-
             }
 //                    this.printTrans();
         }
@@ -1014,9 +966,9 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         System.out.println("largo trans: "+this.transitionPoints.size());
         System.out.println("********printTrans*********");
         for (int k = 0; k < this.transitionPoints.size(); k++)
-            {
-                System.out.println("k: "+k+" p1: "+this.transitionPoints.get(k)[0].getState() +" p2: " +this.transitionPoints.get(k)[1].getState());
-            }
+        {
+            System.out.println("k: "+k+" p1: "+this.transitionPoints.get(k)[0].getState() +" p2: " +this.transitionPoints.get(k)[1].getState());
+        }
 //        System.out.println("largo selected: " + selected.length);
         for (int k = 0; k < selected.length; k++)
         {
