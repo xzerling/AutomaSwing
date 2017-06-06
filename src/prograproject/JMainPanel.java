@@ -321,6 +321,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             
             Automaton NDFA = new Automaton(in, states, trans, endStates, characters, input);
             
+            System.out.println("Cantidad de Transiciones: " + trans.size());
             boolean verify = NDFA.verify();
             
             if(verify)
@@ -337,6 +338,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         if(e.getSource()== verIntegrity)
         {
             ArrayList<Transition> transitions = panelLv1.getTransitions();
+            System.out.println("Integridad");
+            System.out.println("Cantidad de Transiciones: " + transitions.size());
+            for(Transition t : transitions) {
+                System.out.println(t.repTransition());
+            }
+            
             ArrayList<String> finStates = panelLv1.getFinalStates();
             String in = panelLv1.getStart();
             
