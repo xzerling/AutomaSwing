@@ -506,13 +506,27 @@ public void repaintNodes(Graphics g)
                 localSelected[0] = p1;
                 localSelected[1] = p2;
                 localSelected[2] = p3;
-                this.transitionPoints.add(localSelected);
                 
+                boolean alreadyAdded = false;
+                for (int i = 0; i < transitionPoints.size(); i++) 
+                {
+                    if(transitionPoints.get(i)[2].getState().equals(localSelected[2].getState()) && 
+                            transitionPoints.get(i)[0].getState().equals(localSelected[0].getState()) )
+                    {
+//                        System.out.println("tpi: " + transitionPoints.get(i)[0]);
+//                        System.out.println("ls: " + localSelected[0]);
+                        alreadyAdded = true;
+                    }
+                }
+                    System.out.println("AD: " + alreadyAdded);
+                if(!alreadyAdded)
+                    this.transitionPoints.add(localSelected);
                 //condicion si choca la flecha con algun elemento
                 
                 QuadArrow arrow = new QuadArrow(p1.getPoint().x+38, p1.getPoint().y+38, p2.getPoint().x+38, p2.getPoint().y+38, this.labelDiag);
                 arrow.make();
-                this.arrows.add(arrow);
+                if(!alreadyAdded)
+                    this.arrows.add(arrow);
                 
                 this.setIsTransition(false);
 
