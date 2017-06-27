@@ -52,6 +52,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private JButton transition;
     private JButton verIntegrity;
     private JButton refresh;
+    private JButton sinkNode;
     
     private JButton verWord;
     
@@ -72,6 +73,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private ImageIcon  imgbutton4;
     private final ImageIcon imgbutton5;
     private final ImageIcon imgbutton6;
+    private final ImageIcon imgbutton7;
 
     
     private static final int WIDTH = 600;
@@ -147,6 +149,10 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         Image newimg6 = img6.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
         this.imgbutton6 = new ImageIcon(newimg6);
         
+        ImageIcon icon7 = new ImageIcon(getClass().getResource("dc8.png"));
+        Image img7 = icon7.getImage() ;  
+        Image newimg7 = img7.getScaledInstance( 64, 64,  java.awt.Image.SCALE_SMOOTH ) ;  
+        this.imgbutton7 = new ImageIcon(newimg7);
         
         
 
@@ -165,12 +171,14 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         verWord.addActionListener(this);
         verIntegrity.addActionListener(this);
         refresh.addActionListener(this);
+        sinkNode.addActionListener(this);
         
         transNode.setEnabled(false);
         endNode.setEnabled(false);
         transition.setEnabled(false);
         verIntegrity.setEnabled(false);
         refresh.setEnabled(false);
+        sinkNode.setEnabled(false);
     }
 
     public JFrame frameMaker(JDrawPanel panel)
@@ -212,6 +220,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.transition = new JButton();
         this.verIntegrity = new JButton();
         this.refresh = new JButton();
+        this.sinkNode = new JButton();
         
         this.startNode.setIcon(imgbutton1);
         this.transNode.setIcon(imgbutton2);
@@ -219,6 +228,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.transition.setIcon(imgbutton4);
         this.verIntegrity.setIcon(imgbutton5);
         this.refresh.setIcon(imgbutton6);
+        this.sinkNode.setIcon(imgbutton7);
         
         this.verWord = new JButton("Verificar palabra");
         this.verWord.setBounds(120,10 ,150 ,20);
@@ -231,18 +241,21 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         this.transition.setPreferredSize(new Dimension(64,64));
         this.verIntegrity.setPreferredSize(new Dimension(64,64));
         this.refresh.setPreferredSize(new Dimension(64,64));
-                
+        this.sinkNode.setPreferredSize(new Dimension(64,64));
+        
         startNode.setMaximumSize(new Dimension(64,64));
         transNode.setMaximumSize(new Dimension(64,64));
         endNode.setMaximumSize(new Dimension(64,64));
         transition.setMaximumSize(new Dimension(64,64));
         verIntegrity.setMaximumSize(new Dimension(64,64));
         refresh.setMaximumSize(new Dimension(64,64));
+        sinkNode.setMaximumSize(new Dimension(64,64));
 
         
         toolbar.add(this.startNode);
         toolbar.add(this.transNode);
         toolbar.add(this.endNode);
+        toolbar.add(this.sinkNode);
         toolbar.add(this.transition);
         toolbar.add(this.verIntegrity);
         toolbar.add(this.refresh);
@@ -279,6 +292,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             transNode.setEnabled(true);
             endNode.setEnabled(true);
             transition.setEnabled(true);
+            sinkNode.setEnabled(true);
             verIntegrity.setEnabled(true);
         }
         
@@ -292,6 +306,12 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         {
             this.panelLv1.resetBools();
             this.panelLv1.setIsEndNode(true);
+        }
+        
+        if(e.getSource()==sinkNode)
+        {
+            this.panelLv1.resetBools();
+            this.panelLv1.setIsSinkNode(true);
         }
         
         if(e.getSource() == this.transition)

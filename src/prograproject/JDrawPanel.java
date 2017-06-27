@@ -52,10 +52,12 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private BufferedImage img;
     private BufferedImage img2;
     private BufferedImage img3;
+    private BufferedImage img4;
     
     private ArrayList<State> startPoints;
     private ArrayList<State> standPoints;
     private ArrayList<State> endPoints;
+//    private ArrayList<State> sinkPoints;
     private ArrayList<State> sumPoints;
     private ArrayList<State[]> transitionPoints;
     private ArrayList<QuadArrow> arrows;
@@ -65,6 +67,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private boolean isEndNode = false;
     private boolean isStandNode = false;
     private boolean isTransition = false;
+    private boolean isSinkNode = false;
     
     //[0]in, [1] out, [2] label
     private final State selected[] = new State[3];
@@ -102,6 +105,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.startPoints = new ArrayList<>();
         this.standPoints = new ArrayList<>();
         this.endPoints = new ArrayList<>();
+//        this.sinkPoints = new ArrayList<>();
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
         this.trans = new ArrayList<>();
@@ -112,14 +116,16 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         phi = Math.toRadians(40);
         barb = 20;
         
-        try{
+        try
+        {
             img = ImageIO.read(getClass().getResource("dc6.png"));            
             img2 = ImageIO.read(getClass().getResource("dc4.png"));            
             img3 = ImageIO.read(getClass().getResource("dc7.png"));            
-            }
-            catch(IOException e)
-            {
-            }
+            img4 = ImageIO.read(getClass().getResource("dc8.png"));            
+        }
+        catch(IOException e)
+        {
+        }
         
     }
     
@@ -142,6 +148,12 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         
         for (int k = 0; k < endPoints.size(); k++) {
             finalPoint = contains(endPoints.get(k), x, y);
+            if(finalPoint != null)
+                return finalPoint;
+        }
+        
+        for (int k = 0; k < sumPoints.size(); k++) {
+            finalPoint = contains(sumPoints.get(k), x, y);
             if(finalPoint != null)
                 return finalPoint;
         }
@@ -278,6 +290,13 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                 g2.setColor(Color.white);
                 g.drawString(standPoints.get(i).getState(), standPoints.get(i).getPoint().x + DEFAULT_SIZE/2 - 6, standPoints.get(i).getPoint().y + DEFAULT_SIZE/2 + 15);
                 g2.setColor(Color.BLACK);
+            }
+        }
+        if (sumPoints != null)
+        {
+            for (int i = 0; i < sumPoints.size(); i++)
+            {
+                g2.drawImage(img4, sumPoints.get(i).getPoint().x, sumPoints.get(i).getPoint().y, DEFAULT_SIZE, DEFAULT_SIZE, this);
             }
         }
         if (endPoints != null)
@@ -456,6 +475,16 @@ public void repaintNodes(Graphics g)
     {
         this.isStandNode = isStandNode;
     }
+    
+    public boolean isIsSinkNode()
+    {
+        return isStandNode;
+    }
+
+    public void setIsSinkNode(boolean isSinkNode) 
+    {
+        this.isSinkNode = isSinkNode;
+    }
 
     public boolean isIsTransition()
     {
@@ -497,6 +526,11 @@ public void repaintNodes(Graphics g)
         {
             endPoints.add(new State(e.getPoint(), labelMaker(states)));
             setIsEndNode(false);
+        }
+        else if(isSinkNode && !overlap(e))
+        {
+            sumPoints.add(new State(e.getPoint(), labelMaker(states)));
+            setIsSinkNode(false);
         }
          else if(this.isTransition)
         {
