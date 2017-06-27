@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -19,8 +20,8 @@ public class Automaton
     private ArrayList<Character> sigma;
     private ArrayList<String> sumStates;
     private HashMap<String,HashSet<String>> repeatFlag;
+    private ArrayList<String> repTransitions;
     private String input;
-    private VerificationDialog verDialog;
     
     public Automaton(String ini,ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fs,ArrayList<String> sum, ArrayList<Character> alph, String in)
     {
@@ -32,18 +33,19 @@ public class Automaton
         this.sigma = alph;
         this.input = in;
         this.repeatFlag = new HashMap<>();
-        this.verDialog = new VerificationDialog();
+        this.repTransitions = new ArrayList<>();
         for( String s : stat)
         {
             repeatFlag.put(s, new HashSet<>());
         }
     }
     
- public boolean verify() throws InterruptedException
+    
+    public boolean verify() 
     {
         //verificar 
         boolean consume = false;
-        this.verDialog.setVisible(true);
+        
         String current = this.initialState;
         String s = "";
         for (int i = 0; i < input.length(); i++) 
@@ -54,8 +56,9 @@ public class Automaton
                 if(t.getStart().equals(current) && t.getSymbol()== c && !consume)
                 {
                     s = s + t.repTransition();
-                    Thread.sleep(1000);
-                    this.verDialog.refreshTextArea(s);
+                    this.repTransitions.add(s);
+                    System.out.println("s: " + s);
+                    //TimeUnit.SECONDS.sleep(1);
                     current = t.getEnd();
                     consume = true;
                 }
@@ -73,6 +76,10 @@ public class Automaton
         }
     }
  
+    public ArrayList<String> getRepTransitions()
+    {
+        return this.repTransitions;
+    }
     
     public String obtenerTransicion(int estadoI, int sigmaJ, ArrayList<String> states, ArrayList<Character> sigma, ArrayList<Transition> trans)
     {

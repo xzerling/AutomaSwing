@@ -8,11 +8,11 @@ package prograproject;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 /**
  *
@@ -45,11 +45,12 @@ public class VerificationDialog extends JDialog
         
         super.add(buttonsPanel, BorderLayout.SOUTH);
         super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        super.setVisible(true);
+        //super.setVisible(true);
     }
     
-    public void refreshTextArea(String s)
+    public void refreshTextArea(String s) throws InterruptedException
     {
+        TimeUnit.SECONDS.sleep(1);
         this.textArea.setText(s);
     }
 }

@@ -34,7 +34,7 @@ public class Transition
     
     public String repTransition()
     {
-        return ("f( " + this.start + " , " + this.symbol + " ) = " + this.end);
+        return ("f( " + this.start + " , " + this.symbol + " ) = " + this.end + "\n");
     }
 
 }

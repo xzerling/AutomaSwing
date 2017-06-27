@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -87,6 +88,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
     private String name;
     private ArrayList<Character> characters;
     private boolean checkInteg;
+    
+    private VerificationDialog verDialog;
 
     public JMainPanel()
     {
@@ -101,7 +104,6 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
             this.name = JOptionPane.showInputDialog(this, "ingrese caracteres SEPARADOS POR COMA!", "Caracteres", JOptionPane.INFORMATION_MESSAGE);
         }
         this.characters = new ArrayList<>();
-        this.characters.add('_');
         String[] array = this.name.split(",");
         for (int i = 0; i < array.length; i++) {
             this.characters.add(array[i].charAt(0));
@@ -315,7 +317,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource()==verWord)
         {
-            try {
+            
                 String input = JOptionPane.showInputDialog(this, "Ingrese palabra a verificar", "Palabra", JOptionPane.INFORMATION_MESSAGE);
                 String in = this.panelLv1.getStart();
                 ArrayList<String> states = this.panelLv1.getAutomatonStates();
@@ -330,6 +332,21 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                 //Node n = new Node(in, input.replaceAll("_", ""));
                 boolean verify = NDFA.verify();
                 
+                ArrayList<String> repTransitions = NDFA.getRepTransitions();
+                this.verDialog = new VerificationDialog();
+                this.verDialog.setVisible(true);
+                
+                
+                for (int i = 0; i < repTransitions.size(); i++) 
+                {
+                    String s = repTransitions.get(i);
+                    try {
+                        this.verDialog.refreshTextArea(s);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(JMainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
                 if(verify)
                 {
                     JOptionPane.showMessageDialog(this, "¡Palabra Aceptada!");
@@ -339,9 +356,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                     JOptionPane.showMessageDialog(this ,"¡Palabra Rechazada! :-(",
                             "Verificar Palabra", JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JMainPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
         }
         
         if(e.getSource()== verIntegrity)
