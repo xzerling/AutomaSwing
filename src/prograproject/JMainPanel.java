@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -313,27 +315,32 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         
         if(e.getSource()==verWord)
         {
-            String input = JOptionPane.showInputDialog(this, "Ingrese palabra a verificar", "Palabra", JOptionPane.INFORMATION_MESSAGE);
-            String in = this.panelLv1.getStart();
-            ArrayList<String> states = this.panelLv1.getAutomatonStates();
-            ArrayList<Transition> trans = this.panelLv1.getTransitions();
-            ArrayList<String> endStates = this.panelLv1.getFinalStates();
-            
-            Automaton NDFA = new Automaton(in, states, trans, endStates, characters, input);
-            
-            System.out.println("Cantidad de Transiciones: " + trans.size());
-            
-            Node n = new Node(in, input.replaceAll("_", ""));
-            boolean verify = NDFA.verify(n);
-            
-            if(verify)
-            {
-                JOptionPane.showMessageDialog(this, "¡Palabra Aceptada!");
-            }
-            else
-            {
-                JOptionPane.showMessageDialog(this ,"¡Palabra Rechazada! :-(",
-                "Verificar Palabra", JOptionPane.ERROR_MESSAGE);
+            try {
+                String input = JOptionPane.showInputDialog(this, "Ingrese palabra a verificar", "Palabra", JOptionPane.INFORMATION_MESSAGE);
+                String in = this.panelLv1.getStart();
+                ArrayList<String> states = this.panelLv1.getAutomatonStates();
+                ArrayList<Transition> trans = this.panelLv1.getTransitions();
+                ArrayList<String> endStates = this.panelLv1.getFinalStates();
+                ArrayList<String> sum = new ArrayList<>();
+                
+                Automaton NDFA = new Automaton(in, states, trans, endStates, sum, characters, input);
+                
+                System.out.println("Cantidad de Transiciones: " + trans.size());
+                
+                //Node n = new Node(in, input.replaceAll("_", ""));
+                boolean verify = NDFA.verify();
+                
+                if(verify)
+                {
+                    JOptionPane.showMessageDialog(this, "¡Palabra Aceptada!");
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this ,"¡Palabra Rechazada! :-(",
+                            "Verificar Palabra", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JMainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         

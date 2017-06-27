@@ -56,6 +56,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private ArrayList<State> startPoints;
     private ArrayList<State> standPoints;
     private ArrayList<State> endPoints;
+    private ArrayList<State> sumPoints;
     private ArrayList<State[]> transitionPoints;
     private ArrayList<QuadArrow> arrows;
 
@@ -105,6 +106,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
         this.states = new ArrayList<>();
         this.trans = new ArrayList<>();
         this.arrows = new  ArrayList<>();
+        this.sumPoints = new ArrayList<>();
         this.handler = new MouseHandler(null, null);
         
         phi = Math.toRadians(40);
@@ -379,6 +381,15 @@ public void repaintNodes(Graphics g)
     public ArrayList<Transition> getTransitions()
     {
         return this.trans;
+    }
+    
+    public ArrayList<String> getSumStates()
+    {
+        ArrayList<String> sum = new ArrayList<>();
+        for (int i = 0; i < sumPoints.size(); i++) {
+            sum.add(this.sumPoints.get(i).getState());
+        }
+        return sum;
     }
     
     public ArrayList<String> getAutomatonStates()

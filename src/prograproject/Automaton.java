@@ -17,216 +17,62 @@ public class Automaton
     private ArrayList<Transition> transitions;
     private ArrayList<String> finalStates;
     private ArrayList<Character> sigma;
+    private ArrayList<String> sumStates;
     private HashMap<String,HashSet<String>> repeatFlag;
     private String input;
+    private VerificationDialog verDialog;
     
-    public Automaton(String ini,ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fs, ArrayList<Character> alph, String in)
+    public Automaton(String ini,ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fs,ArrayList<String> sum, ArrayList<Character> alph, String in)
     {
         this.initialState = ini;
         this.states = stat;
         this.transitions = trans;
         this.finalStates = fs;
+        this.sumStates = sum;
         this.sigma = alph;
         this.input = in;
         this.repeatFlag = new HashMap<>();
+        this.verDialog = new VerificationDialog();
         for( String s : stat)
         {
             repeatFlag.put(s, new HashSet<>());
         }
     }
     
- public boolean verify(Node n)
+ public boolean verify() throws InterruptedException
     {
         //verificar 
-        if(repeatFlag.get(n.label).contains(n.text))
+        boolean consume = false;
+        this.verDialog.setVisible(true);
+        String current = this.initialState;
+        String s = "";
+        for (int i = 0; i < input.length(); i++) 
+        {
+            char c = this.input.charAt(i);
+            for(Transition t : this.transitions) 
+            {
+                if(t.getStart().equals(current) && t.getSymbol()== c && !consume)
+                {
+                    s = s + t.repTransition();
+                    Thread.sleep(1000);
+                    this.verDialog.refreshTextArea(s);
+                    current = t.getEnd();
+                    consume = true;
+                }
+            }
+            consume = false;
+        }
+        
+        if(this.finalStates.contains(current))
+        {
+            return true;
+        }
+        else
         {
             return false;
         }
-        repeatFlag.get(n.label).add(n.text);
-        if(this.finalStates.contains(n.label) && n.text.equals(""))
-        {
-            return true;
-        }       
-        else
-        {
-            boolean b = false;
-            for(Transition t: this.transitions) 
-            {
-                if(!n.text.isEmpty())
-                {
-                    char c = n.text.charAt(0);
-                    if(t.getStart().equals(n.label) && t.getSymbol()==c)
-                    {
-                        b = b || verify(new Node(t.getEnd(), n.text.substring(1)));
-                    }
-                    else if(t.getStart().equals(n.label) && t.getSymbol()=='_')
-                    {
-                        b = b || verify(new Node(t.getEnd(), n.text));
-                    }
-                }
-                else if(t.getStart().equals(n.label) && t.getSymbol() == '_')
-                {
-                    b = b || verify(new Node(t.getEnd(), ""));
-                }
-            }
-            return b;
-        }
     }
  
-    
-    public Automaton convertToDFA(String ini, ArrayList<String> stat, ArrayList<Transition> trans, ArrayList<String> fin, ArrayList<Character> alph, String in)
-    {
-        String init = stat.get(0);
-        ArrayList<String> dfaStates = new ArrayList<>();
-        ArrayList<Transition> dfaTransitions = new ArrayList<>();
-        ArrayList<String> dfaFinals = new ArrayList<>();
-        
-        int cont = 0;
-        String state = crearEstado(cont);
-        cont++;
-        dfaStates.add(state);
-        
-        String[][] matrix = new String[stat.size()][alph.size()+1];
-        
-        for (int i = 0; i < stat.size(); i++) {
-            for (int j = 0; j < alph.size(); j++) {
-                matrix[i][j] = " ";
-            }
-        }
-        
-        for (int i = 0; i < stat.size(); i++)
-        {
-            for (int j = 0; j < alph.size()+1; j++)
-            {
-                if(j == 0)
-                    matrix[i][j] = stat.get(i);
-                
-                else if(j <= alph.size() )
-                    matrix[i][j] = obtenerTransicion(i, j-1, stat, alph, trans);
-                
-            }            
-        }
-        
-        String qa = "";
-        String sa = "";
-        String st = "";
-        String s = ini;
-        String last = init;
-        String[] transSplit = null;
-        boolean flag = false;
-        boolean isKleene = false;
-
-        int size = stat.size();	
-        
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < alph.size()+1; j++)
-            {  
-            	//System.out.println("i: " + i);	
-            	if(j == 0){
-                    qa = matrix[i][j];
-                }
-                else if(j <= alph.size())
-                {
-                    sa = matrix[i][j];
-                    transSplit = sa.split(" ");
-                    for (int k = 0; k < transSplit.length; k++)
-                    {
-                        String estadoSplit = transSplit[k];
-                        if(i-1 >= 0 && !matrix[i][j].equals(matrix[i-1][j]) && !flag)
-                        {
-                            s = last;
-                            k = 0;
-                            j = 1;
-                            flag = true;
-                            //System.out.println("entra cuando no son iguales" + " s: " + s);
-                        }
-                        
-                        if(stat.contains(estadoSplit))
-                        {
-                            for (int l = 0; l < size ; l++) 
-                            {
-                                if(matrix[l][0].equals(estadoSplit))
-                                {
-                                    String[] auxSplit = matrix[l][j].split(" ");
-                                    for(int p = 0; p < auxSplit.length ; p++)
-                                    {
-                                            if(matrix[l][0].equals(auxSplit[p]))
-                                            {
-                                                    isKleene = true;
-                                                    i = l;
-                                                    Transition kl = new Transition(last,last,alph.get(j-1));
-                                                    dfaTransitions.add(kl);
-                                            }
-                                    }
-
-                                }
-                        }
-                        if(!isKleene)
-                        {
-                            st = crearEstado(cont);
-                            cont++;
-                            dfaStates.add(st);
-                            if(j <= alph.size() )
-                            {
-                                Transition t = new Transition(s, st, alph.get(j-1));
-                                dfaTransitions.add(t);
-
-                            }
-                            //System.out.println("Crea un nuevo estado" + "st: "  + st);
-                            stat.remove(estadoSplit);
-                        }
-                        }
-                        else if(i-1 >= 0 && matrix[i][j].equals(matrix[i-1][j]) && !flag)
-                        {
-                            k = transSplit.length;
-                            //System.out.println("entra cuando son iguales");
-                        }
-                        else if (matrix[i][j].equals(""))
-                        {
-                            continue; 
-                        }
-
-                    }
-                    isKleene = false;
-                }
-                
-                
-                
-            }
-            flag = false;
-            if(!st.equals(""))
-            {
-            	last = st; 
-            }
-                
-        }
-        
-        //encontrar finales
-        String localInicio = init;
-        boolean cambiado = false;
-        for (int i = 0; i < dfaTransitions.size(); i++)
-        {
-            for (int j = i; j < dfaTransitions.size(); j++)
-            {
-                if(dfaTransitions.get(j).getStart().equals(localInicio))
-                {
-                    localInicio = dfaTransitions.get(j).getEnd();
-                    cambiado = true;
-                }
-            }
-            if(cambiado == true)
-            {
-                dfaFinals.add(localInicio);
-                cambiado = false;
-            }
-            localInicio = ini;
-        }
-        
-        Automaton a = new Automaton(init,dfaStates, dfaTransitions, dfaFinals, alph, in);
-        return a;
-    }
-    
     
     public String obtenerTransicion(int estadoI, int sigmaJ, ArrayList<String> states, ArrayList<Character> sigma, ArrayList<Transition> trans)
     {
