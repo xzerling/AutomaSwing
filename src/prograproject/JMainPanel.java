@@ -382,6 +382,7 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
         if(e.getSource()== verIntegrity)
         {
             ArrayList<Transition> transitions = panelLv1.getTransitions();
+            ArrayList<String> states = panelLv1.getAutomatonStates();
             System.out.println("Integridad");
             System.out.println("Cantidad de Transiciones: " + transitions.size());
             for(Transition t : transitions) {
@@ -420,7 +421,31 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                     }
                 }
                 
-                if(complete)
+                boolean conected = false;
+                boolean brk = false;
+                String current = "";
+                int output = 0;
+                
+                for(int i = 0; i < states.size(); i++) 
+                {
+                    current = states.get(i);
+                    for(Transition t : transitions) 
+                    {
+                        if(t.getStart().equals(current))
+                        {
+                            output++;
+                        }
+                    }
+                    if(output != this.characters.size())
+                    {
+                        brk = true;
+                        break;
+                    }
+                    output = 0;
+                }
+                if(!brk){conected = true;}
+                
+                if(complete && conected)
                 {
                     JOptionPane.showMessageDialog(this, "Cumple con las restricciones de integridad");
                     this.verWord.setEnabled(true);
