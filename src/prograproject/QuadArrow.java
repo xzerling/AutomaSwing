@@ -38,6 +38,15 @@ public class QuadArrow
         this.label = label;
     }
     
+    public QuadArrow(State s1, State s2, String label) 
+    {
+        this.x1 = s1.getX();
+        this.y1 = s1.getY();
+        this.x2 = s2.getX();
+        this.y2 = s2.getY();
+        this.label = label;
+    }
+    
     public void make()
     {
         this.control = new Marker(new Point2D.Double((x2+y2)/2, y2/2), label);

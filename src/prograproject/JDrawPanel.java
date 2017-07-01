@@ -599,11 +599,18 @@ public void repaintNodes(Graphics g)
     @Override
     public void mouseDragged(MouseEvent e)
     {
+        System.out.println("DRAG!!!!!!!!!!1");
+        if(this.select != null)
+        {
+            this.select.setPoint(new Point(e.getX(), e.getY()));
+            repaint();
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e)
     {
+        this.select =  null;
     }
 
     @Override
@@ -649,11 +656,11 @@ public void repaintNodes(Graphics g)
             System.out.println("choca");
             return true;
         }
-        if(isLine(e.getX(), e.getY()))
+        /*if(isLine(e.getX(), e.getY()))
         {
             System.out.println("hay linea!");
             return true;
-        }
+        }*/
         System.out.println("false!!!!!!!!!!!!!!!!!!!!");
         return false;
     }
