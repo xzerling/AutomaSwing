@@ -541,9 +541,16 @@ public void repaintNodes(Graphics g)
             else
             {
                 this.selected[1] = this.getElementAt(e.getPoint().x, e.getPoint().y);
-                
+                               
+                boolean alreadyAdded = false;
                 State p1 = selected[0];
                 State p2 = selected[1];
+                
+                if(this.sumPoints.contains(p1) && !p1.getState().equals(p2.getState()))
+                {
+                    alreadyAdded = true;
+                }
+
                 State p3 = new State(null, this.labelDiag);
                 this.selected[2] = p3;
                 
@@ -552,7 +559,7 @@ public void repaintNodes(Graphics g)
                 localSelected[1] = p2;
                 localSelected[2] = p3;
                 
-                boolean alreadyAdded = false;
+                
                 for (int i = 0; i < transitionPoints.size(); i++) 
                 {
                     if(transitionPoints.get(i)[2].getState().equals(localSelected[2].getState()) && 
