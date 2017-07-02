@@ -48,9 +48,9 @@ public class VerificationDialog extends JDialog
         //super.setVisible(true);
     }
     
-    public void refreshTextArea(String s) throws InterruptedException
+    public void refreshTextArea(String s) 
     {
-        TimeUnit.SECONDS.sleep(1);
+        //TimeUnit.SECONDS.sleep(1);
         this.textArea.setText(s);
     }
 }

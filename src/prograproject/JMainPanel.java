@@ -360,11 +360,8 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                 for (int i = 0; i < repTransitions.size(); i++) 
                 {
                     String s = repTransitions.get(i);
-                    try {
-                        this.verDialog.refreshTextArea(s);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(JMainPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    this.verDialog.refreshTextArea(s);
+
                 }
                 
                 if(verify)
@@ -429,6 +426,27 @@ public class JMainPanel extends JPanel implements MouseMotionListener, MouseList
                 for(int i = 0; i < states.size(); i++) 
                 {
                     current = states.get(i);
+                    for(Transition t : transitions) 
+                    {
+                        if(t.getStart().equals(current))
+                        {
+                            output++;
+                        }
+                    }
+                    if(output != this.characters.size())
+                    {
+                        brk = true;
+                        break;
+                    }
+                    output = 0;
+                }
+                
+                ArrayList<String> sum = panelLv1.getSumStates();
+                output = 0;
+                
+                for (int i = 0; i < sum.size(); i++) 
+                {
+                    current = sum.get(i);
                     for(Transition t : transitions) 
                     {
                         if(t.getStart().equals(current))
