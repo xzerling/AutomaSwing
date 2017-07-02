@@ -322,9 +322,6 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
                     this.arrows.get(k).getLine().ctrlx = this.arrows.get(k).getControl().center.x;
                     this.arrows.get(k).getLine().ctrly = this.arrows.get(k).getControl().center.y;
                     
-                    this.arrows.get(k).setX1(this.arrows.get(k).getControl().center.x);
-                    this.arrows.get(k).setY1(this.arrows.get(k).getControl().center.y);
-                    
                     this.arrows.get(k).draw(g2);
                     g2.setPaint(Color.BLACK);
                     
@@ -507,6 +504,7 @@ public void repaintNodes(Graphics g)
             
             System.out.println("nod: " + this.startPoints.get(0).getPoint().getX());
             repaint();
+
         }
         for (int i = 0; i < arrows.size(); i++) {
             System.out.println("flechasPos: " + this.arrows.get(i).getX1() );
@@ -514,6 +512,7 @@ public void repaintNodes(Graphics g)
             System.out.println("s2: " + this.arrows.get(i).getS2());
             
         }
+        
     }
 
     @Override
@@ -566,13 +565,14 @@ public void repaintNodes(Graphics g)
     
     public void updatePos(State select, Point point) 
     {
-        for (int i = 0; i < arrows.size(); i++) {
+        for (int i = 0; i < arrows.size(); i++) 
+        {
             if(arrows.get(i).getS1().equals(select.getState()))
             { 
                 System.out.println("S1!!!!!!!!!!!");
                 arrows.get(i).setX1(point.x + 38);
                 arrows.get(i).setY1(point.y + 38);
-                arrows.get(i).make();
+//                arrows.get(i).make();
             }
             
             if(arrows.get(i).getS2().equals(select.getState()))
@@ -580,8 +580,9 @@ public void repaintNodes(Graphics g)
                 System.out.println("S2!!!!!!!!");
                 arrows.get(i).setX2(point.x + 38);
                 arrows.get(i).setY2(point.y + 38);
-                arrows.get(i).make();
+//                arrows.get(i).refeshArrow(point.x, point.y);
             }
+            arrows.get(i).make();
         }
     }
     

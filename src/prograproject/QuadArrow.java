@@ -38,6 +38,7 @@ public class QuadArrow
         this.x2 = x2;
         this.y2 = y2;
         this.label = label;
+        this.control = new Marker(new Point2D.Double((x2+y2)/2, y2/2), label);
     }
     
     public QuadArrow(State s1, State s2, String label) 
@@ -49,15 +50,15 @@ public class QuadArrow
         this.label = label;
         this.s1 = s1.getState();
         this.s2 = s2.getState();
+        this.control = new Marker(new Point2D.Double((x2+y2)/2, y2/2), label);
     }
     
     public void make()
     {
         this.control = new Marker(new Point2D.Double((x2+y2)/2, y2/2), label);
-        this.arrow = new QuadCurve2D.Double(x1, y1, control.getCenter().getX(), control.getCenter().y, x2, y2);
-        
+        this.arrow = new QuadCurve2D.Double(this.x1, this.y1, control.getCenter().getX(), control.getCenter().getY(), this.x2, this.y2);                 
     }
-    
+        
     public void draw(Graphics2D g)
     {
         g.setColor(Color.BLUE);
@@ -136,8 +137,8 @@ public class QuadArrow
     private void drawArrowHead(Graphics2D g2, Color color)
     {
         g2.setPaint(color);
-        double dy = y2 - y1;
-        double dx = x2 - x1;
+        double dy = this.y2 - this.control.center.y;
+        double dx = this.x2 - this.control.center.x;
         double theta = Math.atan2(dy, dx);
 //        System.out.println("theta = " + Math.toDegrees(theta));
         double x, y, rho = theta + phi;
