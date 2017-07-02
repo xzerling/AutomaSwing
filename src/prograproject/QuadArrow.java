@@ -26,6 +26,8 @@ public class QuadArrow
     private double y2;
     
     private String label;
+    private String s1;
+    private String s2;
     double phi = Math.toRadians(40);
     double barb = 20;
 
@@ -40,17 +42,19 @@ public class QuadArrow
     
     public QuadArrow(State s1, State s2, String label) 
     {
-        this.x1 = s1.getX();
-        this.y1 = s1.getY();
-        this.x2 = s2.getX();
-        this.y2 = s2.getY();
+        this.x1 = s1.getPoint().getX()+ 38;
+        this.y1 = s1.getPoint().getY() + 38;
+        this.x2 = s2.getPoint().getX() + 38;
+        this.y2 = s2.getPoint().getY() + 38;
         this.label = label;
+        this.s1 = s1.getState();
+        this.s2 = s2.getState();
     }
     
     public void make()
     {
         this.control = new Marker(new Point2D.Double((x2+y2)/2, y2/2), label);
-        this.arrow = new QuadCurve2D.Double(x1, y1, x2, y2, x2, y2);
+        this.arrow = new QuadCurve2D.Double(x1, y1, control.getCenter().getX(), control.getCenter().y, x2, y2);
         
     }
     
@@ -74,21 +78,57 @@ public class QuadArrow
         return this.arrow;
     }
 
-    void setX2(double x) 
+    public double getX1() {
+        return this.x1;
+    }
+
+    public double getY1() {
+        return this.y1;
+    }
+
+    public double getX2() {
+        return this.x2;
+    }
+
+    public double getY2() {
+        return this.y2;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getS1() {
+        return s1;
+    }
+
+    public void setS1(String s1) {
+        this.s1 = s1;
+    }
+
+    public String getS2() {
+        return s2;
+    }
+
+    public void setS2(String s2) {
+        this.s2 = s2;
+    }
+    
+    public void setX2(double x) 
     {
         this.x2 = x;
     }
 
-    void setY2(double y) 
+    public void setY2(double y) 
     {
         this.y2 = y;
     }
-    void setX1(double x) 
+    public void setX1(double x) 
     {
         this.x1 = x;
     }
 
-    void setY1(double y) 
+    public void setY1(double y) 
     {
         this.y1 = y;
     }

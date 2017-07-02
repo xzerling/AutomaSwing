@@ -393,117 +393,6 @@ public void repaintNodes(Graphics g)
     
     /*
     *
-    ***********************Metodos Getters y Setters***************************
-    *
-    */
-    
-    public ArrayList<Transition> getTransitions()
-    {
-        return this.trans;
-    }
-    
-    public ArrayList<String> getSumStates()
-    {
-        ArrayList<String> sum = new ArrayList<>();
-        for (int i = 0; i < sumPoints.size(); i++) {
-            sum.add(this.sumPoints.get(i).getState());
-        }
-        return sum;
-    }
-    
-    public ArrayList<String> getAutomatonStates()
-    {
-        ArrayList<String> states = new ArrayList<>();
-        for (int i = 0; i < startPoints.size() ; i++) {
-            states.add(startPoints.get(i).getState());
-        }
-        for (int i = 0; i < standPoints.size(); i++) {
-            states.add(standPoints.get(i).getState());
-        }
-        for (int i = 0; i < endPoints.size(); i++) {
-            states.add(endPoints.get(i).getState());
-        }
-        return states;
-    }
-    
-    public ArrayList<String> getFinalStates()
-    {
-        ArrayList<String> finalStates = new ArrayList<>();
-        for (int i = 0; i < endPoints.size(); i++) {
-            finalStates.add(endPoints.get(i).getState());
-        }
-        return finalStates;
-    }
-    
-    public String getStart()
-    {
-        String ini = startPoints.get(0).getState();
-        return ini;
-    }
-    
-    public JTextArea getTarnsitionTextArea()
-    {
-        return this.textArea;
-    }
-    
-     public boolean isIsStartNode() 
-    {
-        return isStartNode;
-    }
-
-    public void setIsStartNode(boolean isStartNode)
-    {
-        this.isStartNode = isStartNode;
-    }
-
-    public boolean isIsEndNode()
-    {
-        return isEndNode;
-    }
-
-    public void setIsEndNode(boolean isEndNode) 
-    {
-        this.isEndNode = isEndNode;
-    }
-
-    public boolean isIsStandNode()
-    {
-        return isStandNode;
-    }
-
-    public void setIsStandNode(boolean isStandNode) 
-    {
-        this.isStandNode = isStandNode;
-    }
-    
-    public boolean isIsSinkNode()
-    {
-        return isStandNode;
-    }
-
-    public void setIsSinkNode(boolean isSinkNode) 
-    {
-        this.isSinkNode = isSinkNode;
-    }
-
-    public boolean isIsTransition()
-    {
-        return isTransition;
-    }
-
-    public void setIsTransition(boolean isTransition) 
-    {
-        this.isTransition = isTransition;
-    }
-    
-    void setLabelDiag(String transLabel) 
-    {
-        this.labelDiag = transLabel;
-    }
-    
-    
-    /*
-    *
     ***********************Metodos de Eventos***************************
     *
     */
@@ -529,7 +418,7 @@ public void repaintNodes(Graphics g)
         }
         else if(isSinkNode && !overlap(e))
         {
-            sumPoints.add(new State(e.getPoint(), labelMaker(states)));
+            sumPoints.add(new State(e.getPoint(), "x"));
             setIsSinkNode(false);
         }
          else if(this.isTransition)
@@ -545,15 +434,14 @@ public void repaintNodes(Graphics g)
                 boolean alreadyAdded = false;
                 State p1 = selected[0];
                 State p2 = selected[1];
-                
-                if(this.sumPoints.contains(p1) && !p1.getState().equals(p2.getState()))
-                {
-                    alreadyAdded = true;
-                }
-
                 State p3 = new State(null, this.labelDiag);
                 this.selected[2] = p3;
                 
+                if(p1.getState().equals("x") && !p1.getState().equals(p2.getState()))
+                {
+                    alreadyAdded = true;
+                }
+                System.out.println("ADs: " + alreadyAdded);
                 State localSelected[] = new State[3];
                 localSelected[0] = p1;
                 localSelected[1] = p2;
@@ -575,7 +463,8 @@ public void repaintNodes(Graphics g)
                     this.transitionPoints.add(localSelected);
                 //condicion si choca la flecha con algun elemento
                 
-                QuadArrow arrow = new QuadArrow(p1.getPoint().x+38, p1.getPoint().y+38, p2.getPoint().x+38, p2.getPoint().y+38, this.labelDiag);
+                QuadArrow arrow = new QuadArrow(searchNode(p1), searchNode(p2), labelDiag);
+//                QuadArrow arrow = new QuadArrow(p1.getPoint().x+38, p1.getPoint().y+38, p2.getPoint().x+38, p2.getPoint().y+38, this.labelDiag);
                 arrow.make();
                 if(!alreadyAdded)
                     this.arrows.add(arrow);
@@ -610,7 +499,20 @@ public void repaintNodes(Graphics g)
         if(this.select != null)
         {
             this.select.setPoint(new Point(e.getX(), e.getY()));
+            updatePos(select, new Point(e.getX(), e.getY()) );
+//            searchNode(select).setPoint(new Point(e.getX(), e.getY()) );
+            
+            System.out.println("pos1: " + this.arrows.get(0).getX1() );
+            System.out.println("pos2: " + this.arrows.get(0).getX2() );
+            
+            System.out.println("nod: " + this.startPoints.get(0).getPoint().getX());
             repaint();
+        }
+        for (int i = 0; i < arrows.size(); i++) {
+            System.out.println("flechasPos: " + this.arrows.get(i).getX1() );
+            System.out.println("s1: " + this.arrows.get(i).getS1());
+            System.out.println("s2: " + this.arrows.get(i).getS2());
+            
         }
     }
 
@@ -633,6 +535,54 @@ public void repaintNodes(Graphics g)
     @Override
     public void actionPerformed(ActionEvent e)
     {
+    }
+    
+    public State searchNode(State state) 
+    {
+        
+        for (int k = 0; k < startPoints.size(); k++) 
+        {
+            if(state.getState().equals(startPoints.get(k).getState()) )
+                return startPoints.get(k);
+        }
+        
+        for (int k = 0; k < standPoints.size(); k++) {
+            if(state.getState().equals(standPoints.get(k).getState()) )
+                return standPoints.get(k);
+        }
+        
+        for (int k = 0; k < endPoints.size(); k++) {
+            if(state.getState().equals(endPoints.get(k).getState()) )
+                return endPoints.get(k);
+        }
+        
+        for (int k = 0; k < sumPoints.size(); k++) {
+            if(state.getState().equals(sumPoints.get(k).getState()) )
+                return sumPoints.get(k);
+        }
+        
+        return null;
+    }
+    
+    public void updatePos(State select, Point point) 
+    {
+        for (int i = 0; i < arrows.size(); i++) {
+            if(arrows.get(i).getS1().equals(select.getState()))
+            { 
+                System.out.println("S1!!!!!!!!!!!");
+                arrows.get(i).setX1(point.x + 38);
+                arrows.get(i).setY1(point.y + 38);
+                arrows.get(i).make();
+            }
+            
+            if(arrows.get(i).getS2().equals(select.getState()))
+            {
+                System.out.println("S2!!!!!!!!");
+                arrows.get(i).setX2(point.x + 38);
+                arrows.get(i).setY2(point.y + 38);
+                arrows.get(i).make();
+            }
+        }
     }
     
     /*
@@ -1023,6 +973,115 @@ public void repaintNodes(Graphics g)
         this.left2 = false;
         this.up2 = false;
         this.down2 = false;
+    }
+    /*
+    *
+    ***********************Metodos Getters y Setters***************************
+    *
+    */
+    
+    public ArrayList<Transition> getTransitions()
+    {
+        return this.trans;
+    }
+    
+    public ArrayList<String> getSumStates()
+    {
+        ArrayList<String> sum = new ArrayList<>();
+        for (int i = 0; i < sumPoints.size(); i++) {
+            sum.add(this.sumPoints.get(i).getState());
+        }
+        return sum;
+    }
+    
+    public ArrayList<String> getAutomatonStates()
+    {
+        ArrayList<String> states = new ArrayList<>();
+        for (int i = 0; i < startPoints.size() ; i++) {
+            states.add(startPoints.get(i).getState());
+        }
+        for (int i = 0; i < standPoints.size(); i++) {
+            states.add(standPoints.get(i).getState());
+        }
+        for (int i = 0; i < endPoints.size(); i++) {
+            states.add(endPoints.get(i).getState());
+        }
+        return states;
+    }
+    
+    public ArrayList<String> getFinalStates()
+    {
+        ArrayList<String> finalStates = new ArrayList<>();
+        for (int i = 0; i < endPoints.size(); i++) {
+            finalStates.add(endPoints.get(i).getState());
+        }
+        return finalStates;
+    }
+    
+    public String getStart()
+    {
+        String ini = startPoints.get(0).getState();
+        return ini;
+    }
+    
+    public JTextArea getTarnsitionTextArea()
+    {
+        return this.textArea;
+    }
+    
+     public boolean isIsStartNode() 
+    {
+        return isStartNode;
+    }
+
+    public void setIsStartNode(boolean isStartNode)
+    {
+        this.isStartNode = isStartNode;
+    }
+
+    public boolean isIsEndNode()
+    {
+        return isEndNode;
+    }
+
+    public void setIsEndNode(boolean isEndNode) 
+    {
+        this.isEndNode = isEndNode;
+    }
+
+    public boolean isIsStandNode()
+    {
+        return isStandNode;
+    }
+
+    public void setIsStandNode(boolean isStandNode) 
+    {
+        this.isStandNode = isStandNode;
+    }
+    
+    public boolean isIsSinkNode()
+    {
+        return isStandNode;
+    }
+
+    public void setIsSinkNode(boolean isSinkNode) 
+    {
+        this.isSinkNode = isSinkNode;
+    }
+
+    public boolean isIsTransition()
+    {
+        return isTransition;
+    }
+
+    public void setIsTransition(boolean isTransition) 
+    {
+        this.isTransition = isTransition;
+    }
+    
+    void setLabelDiag(String transLabel) 
+    {
+        this.labelDiag = transLabel;
     }
     
     /*
