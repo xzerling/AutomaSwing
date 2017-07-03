@@ -73,6 +73,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
     private final State selected[] = new State[3];
     private State select = new State(null, null);
     private ArrayList<Integer> states;
+    private ArrayList<Integer> statesSum;
     private ArrayList<Transition> trans;
 
     private boolean right = false;
@@ -108,6 +109,7 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
 //        this.sinkPoints = new ArrayList<>();
         this.transitionPoints = new ArrayList<State[]>();
         this.states = new ArrayList<>();
+        this.statesSum = new ArrayList<>();
         this.trans = new ArrayList<>();
         this.arrows = new  ArrayList<>();
         this.sumPoints = new ArrayList<>();
@@ -207,6 +209,23 @@ public class JDrawPanel extends JPanel implements MouseMotionListener, MouseList
             local++;
             states.add(local);
             return ("q"+states.get(states.size() - 1));
+        }
+            
+    }
+    
+    public String labelMakerSum(ArrayList<Integer> statesSum)
+    {
+        if(statesSum == null)
+        {
+            statesSum.add(0);
+            return ("x"+statesSum.get(0));
+        }
+        else
+        {
+            Integer local = (statesSum.size() - 1);
+            local++;
+            statesSum.add(local);
+            return ("x"+statesSum.get(statesSum.size() - 1));
         }
             
     }
@@ -415,7 +434,7 @@ public void repaintNodes(Graphics g)
         }
         else if(isSinkNode && !overlap(e))
         {
-            sumPoints.add(new State(e.getPoint(), "x"));
+            sumPoints.add(new State(e.getPoint(), labelMakerSum(statesSum)));
             setIsSinkNode(false);
         }
          else if(this.isTransition)
@@ -434,7 +453,7 @@ public void repaintNodes(Graphics g)
                 State p3 = new State(null, this.labelDiag);
                 this.selected[2] = p3;
                 
-                if(p1.getState().equals("x") && !p1.getState().equals(p2.getState()))
+                if(p1.getState().charAt(0) == 'x' && !p1.getState().equals(p2.getState()))
                 {
                     alreadyAdded = true;
                 }

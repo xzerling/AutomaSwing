@@ -20,8 +20,6 @@ import javax.swing.JTextArea;
  */
 public class VerificationDialog extends JDialog
 {
-    private JButton ok;
-    private JButton cancel;
     
     private JTextArea textArea;
     
@@ -34,16 +32,6 @@ public class VerificationDialog extends JDialog
         this.textArea = new JTextArea();        
         super.add(this.textArea , BorderLayout.CENTER);
         
-        this.ok = new JButton("Aceptar");
-        this.cancel = new JButton("Cancelar");
-        
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        
-        buttonsPanel.add(this.ok);
-        buttonsPanel.add(this.cancel);
-        
-        super.add(buttonsPanel, BorderLayout.SOUTH);
         super.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         //super.setVisible(true);
     }
